@@ -134,6 +134,13 @@ func main() {
   flag.StringVar(&groupToAdd, "g", "", "The name of the group to add to database.")
   flag.IntVar(&number, "n", 0, "The number of bales to add/ or the id of the record to delete .")
 
+  flag.Usage = func() {
+      w := flag.CommandLine.Output() // may be os.Stderr - but not necessarily
+      fmt.Fprintf(w, "Usage of %s:\n\nThis is a program to use to keep track of bales that have been fed.\nIts useful to have the data to see how many bales you go through for the winter.\n\nUsage:\n\nbales [arguments] [options]\n\nAvailable arguments:\n", os.Args[0])
+      flag.PrintDefaults()
+      //fmt.Fprintf(w, "...custom postamble ... \n")
+  }
+
   flag.Parse()
 
   // Handles cmd line -i 
