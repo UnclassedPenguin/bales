@@ -8,6 +8,7 @@ import (
   "log"
   "time"
   "flag"
+  "path/filepath"
 )
 
 
@@ -139,6 +140,13 @@ func main() {
   // Get Current Date 
   t := time.Now()
   timeStr := t.Format("2006-01-02")
+
+  // change dir to project directory
+  home, _ := os.UserHomeDir()
+  err := os.Chdir(filepath.Join(home, "git/bales/"))
+  if err != nil {
+      panic(err)
+  }
 
   // Create database file if it doesn't exist
   if test {
