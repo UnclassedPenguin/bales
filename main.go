@@ -101,7 +101,7 @@ func exit(status int) {
 func printInfo() {
   fmt.Println("UnclassedPenguin Bale Tracker")
   fmt.Println("")
-  fmt.Println("Groups: Sheep, Goats, Horse, Bulls, Cows")
+  fmt.Println("Groups: sheep, goats, horse, bulls, cows")
 }
 
 
@@ -117,10 +117,16 @@ func main() {
   var info bool
   var list bool
   var test bool
+  var add bool
+  var groupToAdd string
+  var numOfBales int
 
   flag.BoolVar(&info, "i", false, "Prints some information you might need to remember.")
   flag.BoolVar(&list, "l", false, "Prints the Database to terminal.")
   flag.BoolVar(&test, "t", false, "If set, uses the test database.")
+  flag.BoolVar(&add, "a", false, "Adds a record to the database. If set, requires groupToAdd (-g) and numOfBales (-n).")
+  flag.StringVar(&groupToAdd, "g", "", "The name of the group to add to database.")
+  flag.IntVar(&numOfBales, "n", 0, "The number of bales to add for the record.")
 
   flag.Parse()
 
@@ -133,7 +139,6 @@ func main() {
   // Get Current Date 
   t := time.Now()
   timeStr := t.Format("2006-01-02")
-  fmt.Println("Date: ", timeStr)
 
   // Create database file if it doesn't exist
   if test {
@@ -164,12 +169,30 @@ func main() {
   // fetchRecords(db)
 
   if list {
+    fmt.Println("Date: ", timeStr)
     fetchRecords(db)
     os.Exit(0)
   }
 
+
+  // Handles the command line way to add record
+  if add && groupToAdd != "" && numOfBales != 0 {
+    fmt.Println("        Date: ", timeStr)
+    fmt.Println("       Group: ", groupToAdd)
+    fmt.Println("Num of Bales: ", numOfBales)
+    s()
+    fmt.Println("Adding record...")
+    addRecord(db, timeStr, groupToAdd, numOfBales)
+    fmt.Println("Record added!")
+    exit(0)
+  } else if add {
+    fmt.Println("Requires -g and -n! Try again. Or Try -h for help")
+    exit(0)
+  }
+
   // User interaction starts here
   var userChoice int
+  fmt.Println("Date: ", timeStr)
   fmt.Println("What would you like to do? (1, 2, 3)")
   fmt.Println("1) Add Record")
   fmt.Println("2) Delete Record")
@@ -185,7 +208,7 @@ func main() {
         var cont string
 
         s()
-        fmt.Println("What group is this for?(Sheep, Goats, Horse, Bulls, Cows)")
+        fmt.Println("What group is this for?(sheep, goats, horse, bulls, cows)")
         fmt.Print(" > ")
         fmt.Scan(&group)
 
