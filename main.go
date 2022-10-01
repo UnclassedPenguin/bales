@@ -119,15 +119,17 @@ func main() {
   var list bool
   var test bool
   var add bool
+  var del bool
   var groupToAdd string
-  var numOfBales int
+  var number int
 
   flag.BoolVar(&info, "i", false, "Prints some information you might need to remember.")
   flag.BoolVar(&list, "l", false, "Prints the Database to terminal.")
   flag.BoolVar(&test, "t", false, "If set, uses the test database.")
-  flag.BoolVar(&add, "a", false, "Adds a record to the database. If set, requires groupToAdd (-g) and numOfBales (-n).")
+  flag.BoolVar(&add, "a", false, "Adds a record to the database. If set, requires -g (group) and -n (number of bales).")
+  flag.BoolVar(&del, "d", false, "Deletes a record from the database. If set, requires -n (id number of entry to delete).")
   flag.StringVar(&groupToAdd, "g", "", "The name of the group to add to database.")
-  flag.IntVar(&numOfBales, "n", 0, "The number of bales to add for the record.")
+  flag.IntVar(&number, "n", 0, "The number of bales to add/ or the id of the record to delete .")
 
   flag.Parse()
 
@@ -176,27 +178,39 @@ func main() {
   // How to query entire database
   // fetchRecords(db)
 
+  // Handles the command line way to add record
+  if add && groupToAdd != "" && number != 0 {
+    fmt.Println("        Date: ", timeStr)
+    fmt.Println("       Group: ", groupToAdd)
+    fmt.Println("Num of Bales: ", number)
+    s()
+    fmt.Println("Adding record...")
+    addRecord(db, timeStr, groupToAdd, number)
+    fmt.Println("Record added!")
+    exit(0)
+  } else if add {
+    fmt.Println("Requires -g and -n! Try again, or try -h for help.")
+    exit(0)
+  }
+
+  // Handles the command line way to delete record
+  if del && number != 0 {
+    fmt.Print("Deleting record ", number , "...\n")
+    deleteRecord(db, number)
+    fmt.Println("Record deleted!")
+    exit(0)
+  } else if del {
+    fmt.Println("Requires -n (ID number of record to delete)! Try again, or try -h for help.")
+    exit(0)
+  }
+
+  // Handles the command line way to list records
   if list {
     fmt.Println("Date: ", timeStr)
     fetchRecords(db)
     os.Exit(0)
   }
 
-
-  // Handles the command line way to add record
-  if add && groupToAdd != "" && numOfBales != 0 {
-    fmt.Println("        Date: ", timeStr)
-    fmt.Println("       Group: ", groupToAdd)
-    fmt.Println("Num of Bales: ", numOfBales)
-    s()
-    fmt.Println("Adding record...")
-    addRecord(db, timeStr, groupToAdd, numOfBales)
-    fmt.Println("Record added!")
-    exit(0)
-  } else if add {
-    fmt.Println("Requires -g and -n! Try again. Or Try -h for help")
-    exit(0)
-  }
 
   // User interaction starts here
   var userChoice int
@@ -262,13 +276,14 @@ func main() {
         fmt.Println("Would you like to delete another record? (Y or n)")
         fmt.Print(" > ")
         fmt.Scan(&cont)
-        
+
         if cont == "n" {
           exit(0)
         }
       }
 
     case 3:
+      s()
       fetchRecords(db)
       exit(0)
     default:
