@@ -232,89 +232,12 @@ func main() {
   // Handles the github push command.
   if push {
     fmt.Println("This will eventually push to git repo.")
-    //cmd := exec.Command("git", "push")
-
-    //stderr, _ := cmd.StderrPipe()
-    //cmd.Start()
-
-    //scanner := bufio.NewScanner(stderr)
-    //scanner.Split(bufio.ScanWords)
-    //for scanner.Scan() {
-        //m := scanner.Text()
-        ////fmt.Println(m)
-        //fmt.Print(m + " ")
-    //}
-
-    //stdout, _ := cmd.StdoutPipe()
-    //cmd.Start()
-
-    //scanner = bufio.NewScanner(stdout)
-    //scanner.Split(bufio.ScanWords)
-    //for scanner.Scan() {
-        //m := scanner.Text()
-        ////fmt.Println(m)
-        //fmt.Print(m + " ")
-    //}
-    //cmd.Wait()
-    cmd, err := exec.Command("pwd").Output()
-    fmt.Println("cmd---------------->", string(cmd))
-
-    if err != nil {
-        fmt.Println(err)
-    }
-
-    cmd2, err2 := exec.Command("git", "add --all").Output()
-    fmt.Println("cmd2---------------->", string(cmd2))
-
-    if err2 != nil {
-        fmt.Println(err2)
-    }
-
-    cmd3, err3 := exec.Command("git", "commit -m 'update database'").Output()
-    fmt.Println("cmd3---------------->", string(cmd3))
-
-    if err3 != nil {
-        fmt.Println(err3)
-    }
-
-    cmd4, err4 := exec.Command("git", "push").Output()
-    fmt.Println("cmd---------------->", string(cmd4))
-
-    if err4 != nil {
-        fmt.Println(err4)
-    }
-
-
     exit(0)
   }
 
   // Handles the github pull command.
   if pull {
     fmt.Println("This will eventually handle pull from git repo.")
-    cmd := exec.Command("git", "pull")
-
-    stderr, _ := cmd.StderrPipe()
-    cmd.Start()
-
-    scanner := bufio.NewScanner(stderr)
-    scanner.Split(bufio.ScanWords)
-    for scanner.Scan() {
-        m := scanner.Text()
-        fmt.Print(m + " ")
-    }
-
-    stdout, _ := cmd.StdoutPipe()
-    cmd.Start()
-
-    scanner = bufio.NewScanner(stdout)
-    scanner.Split(bufio.ScanWords)
-    for scanner.Scan() {
-        m := scanner.Text()
-        //fmt.Println(m)
-        fmt.Print(m + " ")
-    }
-    cmd.Wait()
-
     exit(0)
   }
 
