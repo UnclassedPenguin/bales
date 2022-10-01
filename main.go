@@ -218,83 +218,90 @@ func main() {
 
   // User interaction starts here
   var userChoice int
-  fmt.Println("Date: ", timeStr)
-  fmt.Println("What would you like to do? (1, 2, 3)")
-  fmt.Println("1) Add Record")
-  fmt.Println("2) Delete Record")
-  fmt.Println("3) Print Records")
-  fmt.Println("4) exit")
-  fmt.Print(" > ")
-  fmt.Scan(&userChoice)
 
-  switch userChoice {
-    case 1:
-      for true {
-        var group string
-        var numOfBales int
-        var cont string
+  for true {
+    fmt.Println("Date: ", timeStr)
+    s()
+    fmt.Println("What would you like to do? (1, 2, 3, 4)")
+    fmt.Println("1) Add Record")
+    fmt.Println("2) Delete Record")
+    fmt.Println("3) Print Records")
+    fmt.Println("4) exit")
+    fmt.Print(" > ")
+    fmt.Scan(&userChoice)
 
-        s()
-        fmt.Println("What group is this for?(sheep, goats, horse, bulls, cows)")
-        fmt.Print(" > ")
-        fmt.Scan(&group)
+    switch userChoice {
+      case 1:
+        for true {
+          var group string
+          var numOfBales int
+          var cont string
 
-        fmt.Println("How many bales?")
-        fmt.Print(" > ")
-        fmt.Scan(&numOfBales)
+          s()
+          fmt.Println("What group is this for?(sheep, goats, horse, bulls, cows)")
+          fmt.Print(" > ")
+          fmt.Scan(&group)
 
-        s()
-        fmt.Println("Adding Record...")
-        addRecord(db, timeStr, group, numOfBales)
-        fmt.Println("Record Added!")
-        s()
+          fmt.Println("How many bales?")
+          fmt.Print(" > ")
+          fmt.Scan(&numOfBales)
 
-        fmt.Println("Would you like to add another record? (Y or n)")
-        fmt.Print(" > ")
-        fmt.Scan(&cont)
+          s()
+          fmt.Println("Adding Record...")
+          addRecord(db, timeStr, group, numOfBales)
+          fmt.Println("Record Added!")
+          s()
 
-        if cont == "n" {
-          exit(0)
-        } else if cont == "" {
-          continue
+          fmt.Println("Would you like to add another record? (Y or n)")
+          fmt.Print(" > ")
+          fmt.Scan(&cont)
+
+          if cont == "n" {
+            exit(0)
+          } else if cont == "" {
+            continue
+          }
+
         }
 
-      }
+        exit(0)
 
-      exit(0)
+      case 2:
+        for true {
+          var recordToDelete int
+          var cont string
 
-    case 2:
-      for true {
-        var recordToDelete int
-        var cont string
+          fmt.Println("Which record would you like to Delete?")
+          fmt.Print(" > ")
+          fmt.Scan(&recordToDelete)
 
-        fmt.Println("Which record would you like to Delete?")
-        fmt.Print(" > ")
-        fmt.Scan(&recordToDelete)
+          s()
+          fmt.Println("Deleting Record...")
+          deleteRecord(db, recordToDelete)
+          fmt.Println("Record Deleted!")
+          s()
 
-        s()
-        fmt.Println("Deleting Record...")
-        deleteRecord(db, recordToDelete)
-        fmt.Println("Record Deleted!")
-        s()
+          fmt.Println("Would you like to delete another record? (Y or n)")
+          fmt.Print(" > ")
+          fmt.Scan(&cont)
 
-        fmt.Println("Would you like to delete another record? (Y or n)")
-        fmt.Print(" > ")
-        fmt.Scan(&cont)
-
-        if cont == "n" {
-          exit(0)
+          if cont == "n" {
+            exit(0)
+          }
         }
-      }
 
-    case 3:
-      s()
-      fetchRecords(db)
-      exit(0)
-    case 4:
-      exit(0)
-    default:
-      fmt.Println("I guess Try again...")
-      exit(0)
+      case 3:
+        s()
+        fetchRecords(db)
+        exit(0)
+
+      case 4:
+        exit(0)
+
+      default:
+        s()
+        fmt.Println("Please enter a valid option...")
+        s()
+    }
   }
 }
