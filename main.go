@@ -75,14 +75,17 @@ func fetchRecords(db *sql.DB) {
     defer record.Close()
 
     fmt.Printf("Bales: ID | Date | Group | NumOfBales\n")
+    fmt.Println("-----------------------------------------------")
     for record.Next() {
         var id int
         var Date string
         var AnimalGroup string
         var NumOfBales int
         record.Scan(&id, &Date, &AnimalGroup, &NumOfBales)
-        fmt.Printf("Bales: %d %s %s %d\n", id, Date, AnimalGroup, NumOfBales)
+        fmt.Printf("Bales: %d | %s | %s | %d\n", id, Date, AnimalGroup, NumOfBales)
     }
+    fmt.Println("-----------------------------------------------")
+    s()
 }
 
 
