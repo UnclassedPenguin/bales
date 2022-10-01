@@ -3,6 +3,9 @@ package main
 import (
   "fmt"
   "os"
+  "os/exec"
+  "bufio"
+  //"strings"
   "database/sql"
   _ "github.com/mattn/go-sqlite3"
   "log"
@@ -123,6 +126,8 @@ func main() {
   var test bool
   var add bool
   var del bool
+  var push bool
+  var pull bool
   var groupToAdd string
   var number int
 
@@ -131,6 +136,8 @@ func main() {
   flag.BoolVar(&test, "t", false, "If set, uses the test database.")
   flag.BoolVar(&add, "a", false, "Adds a record to the database. If set, requires -g (group) and -n (number of bales).")
   flag.BoolVar(&del, "d", false, "Deletes a record from the database. If set, requires -n (id number of entry to delete).")
+  flag.BoolVar(&push, "push", false, "Pushes the databases with git")
+  flag.BoolVar(&pull, "pull", false, "Pulls the databases with git")
   flag.StringVar(&groupToAdd, "g", "", "The name of the group to add to database.")
   flag.IntVar(&number, "n", 0, "The number of bales to add/ or the id of the record to delete .")
 
@@ -219,9 +226,68 @@ func main() {
   if list {
     fmt.Println("Date: ", timeStr)
     fetchRecords(db)
-    os.Exit(0)
+    exit(0)
   }
 
+  // Handles the github push command.
+  if push {
+    fmt.Println("This will eventually push to git repo.")
+    cmd := exec.Command("git", "push")
+
+    stderr, _ := cmd.StderrPipe()
+    cmd.Start()
+
+    scanner := bufio.NewScanner(stderr)
+    scanner.Split(bufio.ScanWords)
+    for scanner.Scan() {
+        m := scanner.Text()
+        //fmt.Println(m)
+        fmt.Print(m + " ")
+    }
+
+    stdout, _ := cmd.StdoutPipe()
+    cmd.Start()
+
+    scanner = bufio.NewScanner(stdout)
+    scanner.Split(bufio.ScanWords)
+    for scanner.Scan() {
+        m := scanner.Text()
+        //fmt.Println(m)
+        fmt.Print(m + " ")
+    }
+    cmd.Wait()
+    exit(0)
+  }
+
+  // Handles the github pull command.
+  if pull {
+    fmt.Println("This will eventually handle pull from git repo.")
+    cmd := exec.Command("git", "pull")
+
+    stderr, _ := cmd.StderrPipe()
+    cmd.Start()
+
+    scanner := bufio.NewScanner(stderr)
+    scanner.Split(bufio.ScanWords)
+    for scanner.Scan() {
+        m := scanner.Text()
+        fmt.Print(m + " ")
+    }
+
+    stdout, _ := cmd.StdoutPipe()
+    cmd.Start()
+
+    scanner = bufio.NewScanner(stdout)
+    scanner.Split(bufio.ScanWords)
+    for scanner.Scan() {
+        m := scanner.Text()
+        //fmt.Println(m)
+        fmt.Print(m + " ")
+    }
+    cmd.Wait()
+
+    exit(0)
+  }
 
   // User interaction starts here
   var userChoice int
