@@ -136,6 +136,7 @@ func main() {
 
   flag.Parse()
 
+  // Handles cmd line -i 
   if info {
     printInfo()
     os.Exit(0)
@@ -146,7 +147,7 @@ func main() {
   t := time.Now()
   timeStr := t.Format("2006-01-02")
 
-  // change dir to project directory
+  // Change dir to project directory
   home, _ := os.UserHomeDir()
   err := os.Chdir(filepath.Join(home, "git/bales/"))
   if err != nil {
@@ -222,6 +223,7 @@ func main() {
   fmt.Println("1) Add Record")
   fmt.Println("2) Delete Record")
   fmt.Println("3) Print Records")
+  fmt.Println("4) exit")
   fmt.Print(" > ")
   fmt.Scan(&userChoice)
 
@@ -288,6 +290,8 @@ func main() {
     case 3:
       s()
       fetchRecords(db)
+      exit(0)
+    case 4:
       exit(0)
     default:
       fmt.Println("I guess Try again...")
