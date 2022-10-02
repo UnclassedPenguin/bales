@@ -174,6 +174,9 @@ func main() {
   timeStr := t.Format("2006-01-02")
 
   // Change dir to project directory
+  // This is needed so a database isn't created where you execute from 
+  // (I have the executable soft linked to to a command in ~/.bin)
+  // Keeps the database in the project directory
   home, _ := os.UserHomeDir()
   err := os.Chdir(filepath.Join(home, "git/bales/"))
   if err != nil {
