@@ -121,7 +121,7 @@ func exit(status int) {
 func printInfo() {
   fmt.Println("UnclassedPenguin Bale Tracker")
   fmt.Println("")
-  fmt.Println("Groups: sheep, goats, horse, bulls, cows")
+  fmt.Println("Groups: sheep, bgoats, lgoats, horse, bulls, cows")
   fmt.Println("Types of bales: square, round")
 }
 
@@ -291,7 +291,7 @@ func main() {
           var baletype string
 
           s()
-          fmt.Println("What group is this for?(sheep, goats, horse, bulls, cows)")
+          fmt.Println("What group is this for?(sheep, bgoats, lgoats, horse, bulls, cows)")
           fmt.Print(" > ")
           fmt.Scan(&group)
 
