@@ -44,6 +44,7 @@ func createTable(db *sql.DB) {
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         "Date" TEXT,
         "AnimalGroup" TEXT,
+        "TypeOfBale" TEXT,
         "NumOfBales" INT);`
   query, err := db.Prepare(balesTable)
   if err != nil {
@@ -53,13 +54,13 @@ func createTable(db *sql.DB) {
 }
 
 // Adds a record to database
-func addRecord(db *sql.DB, Date string, AnimalGroup string, NumOfBales int) {
-  records := "INSERT INTO bales(Date, AnimalGroup, NumOfBales) VALUES (?, ?, ?)"
+func addRecord(db *sql.DB, Date string, AnimalGroup string, TypeOfBale string, NumOfBales int) {
+  records := "INSERT INTO bales(Date, AnimalGroup, TypeOfBale, NumOfBales) VALUES (?, ?, ?, ?)"
   query, err := db.Prepare(records)
   if err != nil {
     log.Fatal("prepare: ",  err)
   }
-  _, err = query.Exec(Date, AnimalGroup, NumOfBales)
+  _, err = query.Exec(Date, AnimalGroup, TypeOfBale, NumOfBales)
   if err != nil {
     log.Fatal("exec:", err)
   }
@@ -87,15 +88,16 @@ func fetchRecords(db *sql.DB) {
     }
     defer record.Close()
 
-    fmt.Printf("Bales: ID | Date | Group | NumOfBales\n")
+    fmt.Printf("Bales: ID | Date | Group | TypeOfBale | NumOfBales\n")
     fmt.Println("-----------------------------------------------")
     for record.Next() {
         var id int
         var Date string
         var AnimalGroup string
+        var TypeOfBale string
         var NumOfBales int
-        record.Scan(&id, &Date, &AnimalGroup, &NumOfBales)
-        fmt.Printf("Bales: %d | %s | %s | %d\n", id, Date, AnimalGroup, NumOfBales)
+        record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
+        fmt.Printf("Bales: %d | %s | %s | %s | %d\n", id, Date, AnimalGroup, TypeOfBale, NumOfBales)
     }
     fmt.Println("-----------------------------------------------")
     s()
@@ -120,6 +122,7 @@ func printInfo() {
   fmt.Println("UnclassedPenguin Bale Tracker")
   fmt.Println("")
   fmt.Println("Groups: sheep, goats, horse, bulls, cows")
+  fmt.Println("Types of bales: square, round")
 }
 
 
@@ -141,6 +144,7 @@ func main() {
   var del bool
   var push bool
   var pull bool
+  var square bool
   var groupToAdd string
   var number int
 
@@ -149,6 +153,7 @@ func main() {
   flag.BoolVar(&test, "t", false, "If set, uses the test database.")
   flag.BoolVar(&add, "a", false, "Adds a record to the database. If set, requires -g (group) and -n (number of bales).")
   flag.BoolVar(&del, "d", false, "Deletes a record from the database. If set, requires -n (id number of entry to delete).")
+  flag.BoolVar(&square, "s", false, "Wether it is a square bale or round bale. If sets, indicates that the bale is square, else it is round.")
   flag.BoolVar(&push, "push", false, "Pushes the databases with git")
   flag.BoolVar(&pull, "pull", false, "Pulls the databases with git")
   flag.StringVar(&groupToAdd, "g", "", "The name of the group to add to database.")
@@ -209,14 +214,22 @@ func main() {
   // How to query entire database
   // fetchRecords(db)
 
+  var typeOfBale string
+
   // Handles the command line way to add record
   if add && groupToAdd != "" && number != 0 {
+    if square {
+      typeOfBale = "square"
+    } else {
+      typeOfBale = "round"
+    }
     fmt.Println("        Date: ", timeStr)
     fmt.Println("       Group: ", groupToAdd)
+    fmt.Println("Type of Bale: ", typeOfBale)
     fmt.Println("Num of Bales: ", number)
     s()
     fmt.Println("Adding record...")
-    addRecord(db, timeStr, groupToAdd, number)
+    addRecord(db, timeStr, groupToAdd, typeOfBale, number)
     fmt.Println("Record added!")
     exit(0)
   } else if add {
@@ -275,19 +288,34 @@ func main() {
           var group string
           var numOfBales int
           var cont string
+          var baletype string
 
           s()
           fmt.Println("What group is this for?(sheep, goats, horse, bulls, cows)")
           fmt.Print(" > ")
           fmt.Scan(&group)
 
+          s()
+          fmt.Println("What type of bale? (s or r)")
+          fmt.Println("s) square")
+          fmt.Println("r) round")
+          fmt.Print(" > ")
+          fmt.Scan(&baletype)
+
+          if baletype == "s" {
+            typeOfBale = "square"
+          } else {
+            typeOfBale = "round"
+          }
+
+          s()
           fmt.Println("How many bales?")
           fmt.Print(" > ")
           fmt.Scan(&numOfBales)
 
           s()
           fmt.Println("Adding Record...")
-          addRecord(db, timeStr, group, numOfBales)
+          addRecord(db, timeStr, group, typeOfBale, numOfBales)
           fmt.Println("Record Added!")
           s()
 
