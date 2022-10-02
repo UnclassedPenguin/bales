@@ -1,3 +1,17 @@
+//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+//  
+// Tyler(UnclassedPenguin) bales 2022
+//  
+// Author: Tyler(UnclassedPenguin)
+//    URL: https://unclassed.ca
+// GitHub: https://github.com/UnclassedPenguin
+//   Desc: A program to keep track of how many bales have been fed to animals.
+//
+//-------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+
+
 package main
 
 import (
@@ -10,7 +24,6 @@ import (
   "flag"
   "path/filepath"
 )
-
 
 // Create database file
 func createDatabase(db string) {
@@ -25,7 +38,7 @@ func createDatabase(db string) {
   }
 }
 
-
+// Creates table initially
 func createTable(db *sql.DB) {
   balesTable := `CREATE TABLE IF NOT EXISTS bales(
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -39,7 +52,7 @@ func createTable(db *sql.DB) {
   query.Exec()
 }
 
-
+// Adds a record to database
 func addRecord(db *sql.DB, Date string, AnimalGroup string, NumOfBales int) {
   records := "INSERT INTO bales(Date, AnimalGroup, NumOfBales) VALUES (?, ?, ?)"
   query, err := db.Prepare(records)
@@ -52,7 +65,7 @@ func addRecord(db *sql.DB, Date string, AnimalGroup string, NumOfBales int) {
   }
 }
 
-
+// Deletes a record from database
 func deleteRecord(db *sql.DB, id int) {
   records := "DELETE FROM bales where id = ?"
   query, err := db.Prepare(records)
@@ -66,7 +79,7 @@ func deleteRecord(db *sql.DB, id int) {
 
 }
 
-
+// Fetches all records from database and prints to screen
 func fetchRecords(db *sql.DB) {
     record, err := db.Query("SELECT * FROM bales")
     if err != nil {
@@ -88,12 +101,12 @@ func fetchRecords(db *sql.DB) {
     s()
 }
 
-
+// s for give me some (s)pace
 func s() {
   fmt.Print("\n")
 }
 
-
+// Exits. Obvious,  yeah?
 func exit(status int) {
   s()
   fmt.Println("Thanks, Bye!")
@@ -101,7 +114,8 @@ func exit(status int) {
   s()
 }
 
-
+// for flag -i. Should add some more useful (i)nfo here,
+// but this is helpful for now.
 func printInfo() {
   fmt.Println("UnclassedPenguin Bale Tracker")
   fmt.Println("")
@@ -109,6 +123,8 @@ func printInfo() {
 }
 
 
+// Global databases. One for real, and one to test things with,
+// that has garbage data in it. 
 const fileName = "database.db"
 const testDb = "test-database.db"
 
@@ -147,12 +163,11 @@ func main() {
 
   flag.Parse()
 
-  // Handles cmd line -i 
+  // Handles cmd line flag -i 
   if info {
     printInfo()
     os.Exit(0)
   }
-
 
   // Get Current Date 
   t := time.Now()
@@ -172,8 +187,8 @@ func main() {
     databaseToUse = fileName
   }
 
+  // Creates database if it hasn't been created yet.
   createDatabase(databaseToUse)
-
 
   // Initialize database
   db, err := sql.Open("sqlite3", databaseToUse)
@@ -186,10 +201,8 @@ func main() {
 
   // How to add entry:
   // addRecord(db, timeStr, "Goats", 2)
-
   // How to delete entry:
   // deleteRecord(db, 2) // where 2 is id number of entry
-
   // How to query entire database
   // fetchRecords(db)
 
@@ -241,6 +254,7 @@ func main() {
   // User interaction starts here
   var userChoice int
 
+  // Main loop starts here if no command line options are used (except -t.)
   for true {
     fmt.Println("Date: ", timeStr)
     s()
