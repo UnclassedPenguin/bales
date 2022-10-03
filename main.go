@@ -103,19 +103,13 @@ func fetchRecords(db *sql.DB) {
 }
 
 func fetchGroup(db *sql.DB, AnimalGroup string) {
-    records, err := db.Query("SELECT * FROM bales WHERE group = ?")
+    record, err := db.Query("SELECT * FROM bales WHERE AnimalGroup = ?", AnimalGroup)
 
-    query, err := db.Prepare(records)
     if err != nil {
-      log.Fatal("prepare: ",  err)
+      log.Fatal(err)
     }
 
-    _, err = query.Exec(AnimalGroup)
-    if err != nil {
-      log.Fatal("exec:", err)
-    }
-
-    defer records.Close()
+    defer record.Close()
 
     fmt.Printf("Bales: ID | Date | Group | TypeOfBale | NumOfBales\n")
     fmt.Println("-----------------------------------------------")
