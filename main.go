@@ -100,7 +100,6 @@ func fetchRecords(db *sql.DB) {
         fmt.Printf("Bales: %d | %s | %s | %s | %d\n", id, Date, AnimalGroup, TypeOfBale, NumOfBales)
     }
     fmt.Println("-----------------------------------------------")
-    s()
 }
 
 // s for give me some (s)pace
