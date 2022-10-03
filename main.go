@@ -102,6 +102,36 @@ func fetchRecords(db *sql.DB) {
     fmt.Println("-----------------------------------------------")
 }
 
+func fetchGroup(db *sql.DB, AnimalGroup string) {
+    records, err := db.Query("SELECT * FROM bales WHERE group = ?")
+
+    query, err := db.Prepare(records)
+    if err != nil {
+      log.Fatal("prepare: ",  err)
+    }
+
+    _, err = query.Exec(AnimalGroup)
+    if err != nil {
+      log.Fatal("exec:", err)
+    }
+
+    defer records.Close()
+
+    fmt.Printf("Bales: ID | Date | Group | TypeOfBale | NumOfBales\n")
+    fmt.Println("-----------------------------------------------")
+    for record.Next() {
+        var id int
+        var Date string
+        var AnimalGroup string
+        var TypeOfBale string
+        var NumOfBales int
+        record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
+        fmt.Printf("Bales: %d | %s | %s | %s | %d\n", id, Date, AnimalGroup, TypeOfBale, NumOfBales)
+    }
+    fmt.Println("-----------------------------------------------")
+
+}
+
 // s for give me some (s)pace
 func s() {
   fmt.Print("\n")
@@ -144,7 +174,7 @@ func main() {
   var push bool
   var pull bool
   var square bool
-  var groupToAdd string
+  var group string
   var number int
 
   flag.BoolVar(&info, "i", false, "Prints some information you might need to remember.")
@@ -155,7 +185,7 @@ func main() {
   flag.BoolVar(&square, "s", false, "Wether it is a square bale or round bale. If sets, indicates that the bale is square, else it is round.")
   flag.BoolVar(&push, "push", false, "Pushes the databases with git")
   flag.BoolVar(&pull, "pull", false, "Pulls the databases with git")
-  flag.StringVar(&groupToAdd, "g", "", "The name of the group to add to database.")
+  flag.StringVar(&group, "g", "", "The name of the group to add to database.")
   flag.IntVar(&number, "n", 0, "The number of bales to add/ or the id of the record to delete .")
 
   flag.Usage = func() {
@@ -216,19 +246,19 @@ func main() {
   var typeOfBale string
 
   // Handles the command line way to add record
-  if add && groupToAdd != "" && number != 0 {
+  if add && group != "" && number != 0 {
     if square {
       typeOfBale = "square"
     } else {
       typeOfBale = "round"
     }
     fmt.Println("        Date: ", timeStr)
-    fmt.Println("       Group: ", groupToAdd)
+    fmt.Println("       Group: ", group)
     fmt.Println("Type of Bale: ", typeOfBale)
     fmt.Println("Num of Bales: ", number)
     s()
     fmt.Println("Adding record...")
-    addRecord(db, timeStr, groupToAdd, typeOfBale, number)
+    addRecord(db, timeStr, group, typeOfBale, number)
     fmt.Println("Record added!")
     exit(0)
   } else if add {
@@ -249,9 +279,15 @@ func main() {
 
   // Handles the command line way to list records
   if list {
-    fmt.Println("Date: ", timeStr)
-    fetchRecords(db)
-    exit(0)
+    if group != "" {
+      fmt.Println("Date: ", timeStr)
+      fetchGroup(db, group)
+      exit(0)
+    } else {
+      fmt.Println("Date: ", timeStr)
+      fetchRecords(db)
+      exit(0)
+    }
   }
 
   // Handles the github push command.
