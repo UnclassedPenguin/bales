@@ -150,6 +150,7 @@ func printInfo() {
 func printVersion() {
   fmt.Println("UnclassedPenguin Bale Tracker")
   fmt.Println("v0.1.0")
+  os.Exit(0)
 }
 
 
@@ -172,9 +173,9 @@ func main() {
   var push bool
   var pull bool
   var square bool
+  var version bool
   var group string
   var number int
-  var version string
 
   flag.BoolVar(&info, "i", false, "Prints some information you might need to remember.")
   flag.BoolVar(&list, "l", false, "Prints the Database to terminal. Can add -g [group] to only list the records for a specific group.")
@@ -184,8 +185,8 @@ func main() {
   flag.BoolVar(&square, "s", false, "Wether it is a square bale or round bale. If sets, indicates that the bale is square, else it is round.")
   flag.BoolVar(&push, "push", false, "Pushes the databases with git")
   flag.BoolVar(&pull, "pull", false, "Pulls the databases with git")
+  flag.BoolVar(&version, "v", false, "Print the version number and exit.")
   flag.StringVar(&group, "g", "", "The name of the group to add to database.")
-  flag.StringVar(&version, "v", "", "Print the version number and exit.")
   flag.IntVar(&number, "n", 0, "The number of bales to add/ or the id of the record to delete .")
 
   // This changes the help/usage info when -h is used.
@@ -207,7 +208,6 @@ func main() {
   // Handles cmd line flag -v 
   if version {
     printVersion()
-    exit(0)
   }
 
   // Get Current Date 
