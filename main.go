@@ -58,11 +58,11 @@ func addRecord(db *sql.DB, Date string, AnimalGroup string, TypeOfBale string, N
   records := "INSERT INTO bales(Date, AnimalGroup, TypeOfBale, NumOfBales) VALUES (?, ?, ?, ?)"
   query, err := db.Prepare(records)
   if err != nil {
-    log.Fatal("prepare: ",  err)
+    log.Fatal(err)
   }
   _, err = query.Exec(Date, AnimalGroup, TypeOfBale, NumOfBales)
   if err != nil {
-    log.Fatal("exec:", err)
+    log.Fatal(err)
   }
 }
 
@@ -71,13 +71,12 @@ func deleteRecord(db *sql.DB, id int) {
   records := "DELETE FROM bales where id = ?"
   query, err := db.Prepare(records)
   if err != nil {
-    log.Fatal("prepare: ",  err)
+    log.Fatal(err)
   }
   _, err = query.Exec(id)
   if err != nil {
-    log.Fatal("exec:", err)
+    log.Fatal(err)
   }
-
 }
 
 // Fetches all records from database and prints to screen
@@ -105,7 +104,6 @@ func fetchRecords(db *sql.DB) {
 // Fetches all records for a specific group. Requires -l and -g [groupname]
 func fetchGroup(db *sql.DB, AnimalGroup string) {
     record, err := db.Query("SELECT * FROM bales WHERE AnimalGroup = ?", AnimalGroup)
-
     if err != nil {
       log.Fatal(err)
     }
@@ -124,7 +122,6 @@ func fetchGroup(db *sql.DB, AnimalGroup string) {
         fmt.Printf("Bales: %d | %s | %s | %s | %d\n", id, Date, AnimalGroup, TypeOfBale, NumOfBales)
     }
     fmt.Println("-----------------------------------------------")
-
 }
 
 // s for give me some (s)pace
@@ -150,8 +147,8 @@ func printInfo() {
 }
 
 
-// Global databases. One for real, and one to test things with,
-// that has garbage data in it. 
+// Global variable for databases. One for real, and one to test 
+// things with, that has garbage data in it.
 const fileName = "database.db"
 const testDb = "test-database.db"
 
@@ -183,6 +180,7 @@ func main() {
   flag.StringVar(&group, "g", "", "The name of the group to add to database.")
   flag.IntVar(&number, "n", 0, "The number of bales to add/ or the id of the record to delete .")
 
+  // This changes the help/usage info when -h is used.
   flag.Usage = func() {
       w := flag.CommandLine.Output() // may be os.Stderr - but not necessarily
       fmt.Fprintf(w, "Description of %s:\n\nThis is a program to use to keep track of bales that have been fed.\nIts useful to have the data to see how many bales you go through for the winter.\n\nUsage:\n\nbales [arguments] [options]\n\nAvailable arguments:\n", os.Args[0])
@@ -195,7 +193,7 @@ func main() {
   // Handles cmd line flag -i 
   if info {
     printInfo()
-    os.Exit(0)
+    exit(0)
   }
 
   // Get Current Date 
@@ -212,7 +210,8 @@ func main() {
       panic(err)
   }
 
-  // Create database file if it doesn't exist
+  // Says whether to use the test database or the real database. 
+  // Set with -t 
   if test {
     databaseToUse = testDb
   } else {
@@ -258,7 +257,7 @@ func main() {
     exit(0)
   } else if add {
     fmt.Println("Requires -g and -n! Try again, or try -h for help.")
-    exit(0)
+    exit(1)
   }
 
   // Handles the command line way to delete record
@@ -269,7 +268,7 @@ func main() {
     exit(0)
   } else if del {
     fmt.Println("Requires -n (ID number of record to delete)! Try again, or try -h for help.")
-    exit(0)
+    exit(1)
   }
 
   // Handles the command line way to list records
