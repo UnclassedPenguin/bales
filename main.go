@@ -102,6 +102,7 @@ func fetchRecords(db *sql.DB) {
     fmt.Println("-----------------------------------------------")
 }
 
+// Fetches all records for a specific group. Requires -l and -g [groupname]
 func fetchGroup(db *sql.DB, AnimalGroup string) {
     record, err := db.Query("SELECT * FROM bales WHERE AnimalGroup = ?", AnimalGroup)
 
@@ -172,7 +173,7 @@ func main() {
   var number int
 
   flag.BoolVar(&info, "i", false, "Prints some information you might need to remember.")
-  flag.BoolVar(&list, "l", false, "Prints the Database to terminal.")
+  flag.BoolVar(&list, "l", false, "Prints the Database to terminal. Can add -g [group] to only list the records for a specific group.")
   flag.BoolVar(&test, "t", false, "If set, uses the test database.")
   flag.BoolVar(&add, "a", false, "Adds a record to the database. If set, requires -g (group) and -n (number of bales).")
   flag.BoolVar(&del, "d", false, "Deletes a record from the database. If set, requires -n (id number of entry to delete).")
