@@ -182,7 +182,7 @@ func main() {
   flag.BoolVar(&test, "t", false, "If set, uses the test database.")
   flag.BoolVar(&add, "a", false, "Adds a record to the database. If set, requires -g (group) and -n (number of bales).")
   flag.BoolVar(&del, "d", false, "Deletes a record from the database. If set, requires -n (id number of entry to delete).")
-  flag.BoolVar(&square, "s", false, "Wether it is a square bale or round bale. If sets, indicates that the bale is square, else it is round.")
+  flag.BoolVar(&square, "s", false, "Wether it is a square bale or round bale. If set, indicates that the bale is square, else it is round.")
   flag.BoolVar(&push, "push", false, "Pushes the databases with git")
   flag.BoolVar(&pull, "pull", false, "Pulls the databases with git")
   flag.BoolVar(&version, "v", false, "Print the version number and exit.")
