@@ -87,6 +87,9 @@ func fetchRecords(db *sql.DB) {
     }
     defer record.Close()
 
+    totalSlice := []int{}
+    var total int
+
     fmt.Printf("Bales: ID | Date | Group | TypeOfBale | NumOfBales\n")
     fmt.Println("-----------------------------------------------")
     for record.Next() {
@@ -96,9 +99,19 @@ func fetchRecords(db *sql.DB) {
         var TypeOfBale string
         var NumOfBales int
         record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
+        totalSlice = append(totalSlice, NumOfBales)
         fmt.Printf("Bales: %d | %s | %s | %s | %d\n", id, Date, AnimalGroup, TypeOfBale, NumOfBales)
     }
+
+    // adds up the slice to tell you the total number of bales
+    for _, num := range totalSlice {
+      total += num
+    }
+
     fmt.Println("-----------------------------------------------")
+    fmt.Println("Bales:                           Total: ", total)
+    fmt.Println("-----------------------------------------------")
+
 }
 
 // Fetches all records for a specific group. Requires -l and -g [groupname]
@@ -110,6 +123,9 @@ func fetchGroup(db *sql.DB, AnimalGroup string) {
 
     defer record.Close()
 
+    totalSlice := []int{}
+    var total int
+
     fmt.Printf("Bales: ID | Date | Group | TypeOfBale | NumOfBales\n")
     fmt.Println("-----------------------------------------------")
     for record.Next() {
@@ -119,8 +135,17 @@ func fetchGroup(db *sql.DB, AnimalGroup string) {
         var TypeOfBale string
         var NumOfBales int
         record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
+        totalSlice = append(totalSlice, NumOfBales)
         fmt.Printf("Bales: %d | %s | %s | %s | %d\n", id, Date, AnimalGroup, TypeOfBale, NumOfBales)
     }
+
+    // adds up the slice to tell you the total number of bales
+    for _, num := range totalSlice {
+      total += num
+    }
+
+    fmt.Println("-----------------------------------------------")
+    fmt.Println("Bales:                           Total: ", total)
     fmt.Println("-----------------------------------------------")
 }
 
@@ -210,6 +235,7 @@ func main() {
     printVersion()
   }
 
+
   // Get Current Date 
   t := time.Now()
   timeStr := t.Format("2006-01-02")
@@ -250,6 +276,13 @@ func main() {
   // deleteRecord(db, 2) // where 2 is id number of entry
   // How to query entire database
   // fetchRecords(db)
+
+//TEST FUNCTIONS
+  if testFunction {
+    getTotal(db)
+    exit(0)
+  }
+
 
   var typeOfBale string
 
