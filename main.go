@@ -149,6 +149,8 @@ func fetchRecords(db *sql.DB) {
 
   t.AppendFooter(table.Row{"", "", "", "Total:", total})
   t.SetStyle(table.StyleLight)
+  // This separates rows...Not sure I like it, leave it for now.
+  //t.Style().Options.SeparateRows = true
   t.Render()
 }
 
