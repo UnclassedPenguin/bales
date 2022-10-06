@@ -148,6 +148,7 @@ func fetchRecords(db *sql.DB) {
   }
 
   t.AppendFooter(table.Row{"", "", "", "Total:", total})
+  t.SetStyle(table.StyleLight)
   t.Render()
 }
 
@@ -220,6 +221,7 @@ func fetchGroup(db *sql.DB, AnimalGroup string) {
   }
 
   t.AppendFooter(table.Row{"", "", "", "Total:", total})
+  t.SetStyle(table.StyleLight)
   t.Render()
 }
 
