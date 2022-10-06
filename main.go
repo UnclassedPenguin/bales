@@ -235,7 +235,6 @@ func main() {
     printVersion()
   }
 
-
   // Get Current Date 
   t := time.Now()
   timeStr := t.Format("2006-01-02")
@@ -276,12 +275,6 @@ func main() {
   // deleteRecord(db, 2) // where 2 is id number of entry
   // How to query entire database
   // fetchRecords(db)
-
-//TEST FUNCTIONS
-  if testFunction {
-    getTotal(db)
-    exit(0)
-  }
 
 
   var typeOfBale string
