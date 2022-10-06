@@ -25,7 +25,7 @@ import (
   "path/filepath"
 )
 
-// Create database file
+// Create database file if doesn't exist
 func createDatabase(db string) {
   _, err := os.Stat(db)
   if os.IsNotExist(err) {
@@ -38,7 +38,7 @@ func createDatabase(db string) {
   }
 }
 
-// Creates table initially
+// Creates table in database if doesn't exist
 func createTable(db *sql.DB) {
   balesTable := `CREATE TABLE IF NOT EXISTS bales(
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -155,7 +155,8 @@ func s() {
 }
 
 // Exits. Obvious,  yeah?
-func exit(status int) {
+func exit(db *sql.DB, status int) {
+  db.Close()
   s()
   fmt.Println("Thanks, Bye!")
   os.Exit(status)
@@ -169,12 +170,13 @@ func printInfo() {
   fmt.Println("")
   fmt.Println("Groups: sheep, bgoats, lgoats, horse, bulls, cows")
   fmt.Println("Types of bales: square, round")
+  os.Exit(0)
 }
 
 // for flag -v. Print version info
 func printVersion() {
   fmt.Println("UnclassedPenguin Bale Tracker")
-  fmt.Println("v0.1.0")
+  fmt.Println("v0.1.1")
   os.Exit(0)
 }
 
@@ -185,6 +187,7 @@ const fileName = "database.db"
 const testDb = "test-database.db"
 
 
+// Main Function
 func main() {
 
   var databaseToUse string
@@ -227,7 +230,6 @@ func main() {
   // Handles cmd line flag -i 
   if info {
     printInfo()
-    exit(0)
   }
 
   // Handles cmd line flag -v 
@@ -294,10 +296,10 @@ func main() {
     fmt.Println("Adding record...")
     addRecord(db, timeStr, group, typeOfBale, number)
     fmt.Println("Record added!")
-    exit(0)
+    exit(db, 0)
   } else if add {
     fmt.Println("Requires -g and -n! Try again, or try -h for help.")
-    exit(1)
+    exit(db, 1)
   }
 
   // Handles the command line way to delete record
@@ -305,10 +307,10 @@ func main() {
     fmt.Print("Deleting record ", number , "...\n")
     deleteRecord(db, number)
     fmt.Println("Record deleted!")
-    exit(0)
+    exit(db, 0)
   } else if del {
     fmt.Println("Requires -n (ID number of record to delete)! Try again, or try -h for help.")
-    exit(1)
+    exit(db, 1)
   }
 
   // Handles the command line way to list records
@@ -316,24 +318,24 @@ func main() {
     if group != "" {
       fmt.Println("Date: ", timeStr)
       fetchGroup(db, group)
-      exit(0)
+      exit(db, 0)
     } else {
       fmt.Println("Date: ", timeStr)
       fetchRecords(db)
-      exit(0)
+      exit(db, 0)
     }
   }
 
   // Handles the github push command.
   if push {
     fmt.Println("This will eventually push to git repo.")
-    exit(0)
+    exit(db, 0)
   }
 
   // Handles the github pull command.
   if pull {
     fmt.Println("This will eventually handle pull from git repo.")
-    exit(0)
+    exit(db, 0)
   }
 
   // User interaction starts here
@@ -393,14 +395,14 @@ func main() {
           fmt.Scan(&cont)
 
           if cont == "n" {
-            exit(0)
+            exit(db, 0)
           } else if cont == "" {
             continue
           }
 
         }
 
-        exit(0)
+        exit(db, 0)
 
       case 2:
         for true {
@@ -422,17 +424,17 @@ func main() {
           fmt.Scan(&cont)
 
           if cont == "n" {
-            exit(0)
+            exit(db, 0)
           }
         }
 
       case 3:
         s()
         fetchRecords(db)
-        exit(0)
+        exit(db, 0)
 
       case 4:
-        exit(0)
+        exit(db, 0)
 
       default:
         s()
