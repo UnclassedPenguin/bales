@@ -19,6 +19,7 @@ import (
   "os"
   "database/sql"
   _ "github.com/mattn/go-sqlite3"
+  "github.com/jedib0t/go-pretty/v6/table"
   "log"
   "time"
   "flag"
@@ -79,74 +80,147 @@ func deleteRecord(db *sql.DB, id int) {
   }
 }
 
+// This is old way of doing fetchRecords, without go-pretty tables. Will
+// Probably just end up removing it but leaving it for now...
+// Fetches all records from database and prints to screen
+//func fetchRecords(db *sql.DB) {
+    //record, err := db.Query("SELECT * FROM bales")
+    //if err != nil {
+        //log.Fatal(err)
+    //}
+    //defer record.Close()
+
+    //totalSlice := []int{}
+    //var total int
+
+    //fmt.Printf("Bales: ID | Date | Group | TypeOfBale | NumOfBales\n")
+    //fmt.Println("-----------------------------------------------")
+    //for record.Next() {
+        //var id int
+        //var Date string
+        //var AnimalGroup string
+        //var TypeOfBale string
+        //var NumOfBales int
+        //record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
+        //totalSlice = append(totalSlice, NumOfBales)
+        //fmt.Printf("Bales: %d | %s | %s | %s | %d\n", id, Date, AnimalGroup, TypeOfBale, NumOfBales)
+    //}
+
+    //// adds up the slice to tell you the total number of bales
+    //for _, num := range totalSlice {
+      //total += num
+    //}
+
+    //fmt.Println("-----------------------------------------------")
+    //fmt.Println("Bales:                           Total: ", total)
+    //fmt.Println("-----------------------------------------------")
+//}
+
 // Fetches all records from database and prints to screen
 func fetchRecords(db *sql.DB) {
-    record, err := db.Query("SELECT * FROM bales")
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer record.Close()
+  record, err := db.Query("SELECT * FROM bales")
+  if err != nil {
+    log.Fatal(err)
+  }
+  defer record.Close()
 
-    totalSlice := []int{}
-    var total int
+  totalSlice := []int{}
+  var total int
 
-    fmt.Printf("Bales: ID | Date | Group | TypeOfBale | NumOfBales\n")
-    fmt.Println("-----------------------------------------------")
-    for record.Next() {
-        var id int
-        var Date string
-        var AnimalGroup string
-        var TypeOfBale string
-        var NumOfBales int
-        record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
-        totalSlice = append(totalSlice, NumOfBales)
-        fmt.Printf("Bales: %d | %s | %s | %s | %d\n", id, Date, AnimalGroup, TypeOfBale, NumOfBales)
-    }
+  t := table.NewWriter()
+  t.SetOutputMirror(os.Stdout)
 
-    // adds up the slice to tell you the total number of bales
-    for _, num := range totalSlice {
-      total += num
-    }
+  t.AppendHeader(table.Row{"id", "Date", "Group", "TypeOfBale", "NumOfBale"})
+  for record.Next() {
+    var id int
+    var Date string
+    var AnimalGroup string
+    var TypeOfBale string
+    var NumOfBales int
+    record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
+    totalSlice = append(totalSlice, NumOfBales)
+    t.AppendRows([]table.Row{{id, Date, AnimalGroup, TypeOfBale, NumOfBales}})
+  }
 
-    fmt.Println("-----------------------------------------------")
-    fmt.Println("Bales:                           Total: ", total)
-    fmt.Println("-----------------------------------------------")
+  // adds up the slice to tell you the total number of bales
+  for _, num := range totalSlice {
+    total += num
+  }
 
+  t.AppendFooter(table.Row{"", "", "", "Total:", total})
+  t.Render()
 }
+
+// This is old way of doing fetchGroup, without go-pretty tables. Will
+// Probably just end up removing it but leaving it for now...
+// Fetches all records for a specific group. Requires -l and -g [groupname]
+//func fetchGroup(db *sql.DB, AnimalGroup string) {
+    //record, err := db.Query("SELECT * FROM bales WHERE AnimalGroup = ?", AnimalGroup)
+    //if err != nil {
+      //log.Fatal(err)
+    //}
+
+    //defer record.Close()
+
+    //totalSlice := []int{}
+    //var total int
+
+    //fmt.Printf("Bales: ID | Date | Group | TypeOfBale | NumOfBales\n")
+    //fmt.Println("-----------------------------------------------")
+    //for record.Next() {
+        //var id int
+        //var Date string
+        //var AnimalGroup string
+        //var TypeOfBale string
+        //var NumOfBales int
+        //record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
+        //totalSlice = append(totalSlice, NumOfBales)
+        //fmt.Printf("Bales: %d | %s | %s | %s | %d\n", id, Date, AnimalGroup, TypeOfBale, NumOfBales)
+    //}
+
+    //// adds up the slice to tell you the total number of bales
+    //for _, num := range totalSlice {
+      //total += num
+    //}
+
+    //fmt.Println("-----------------------------------------------")
+    //fmt.Println("Bales:                           Total: ", total)
+    //fmt.Println("-----------------------------------------------")
+//}
 
 // Fetches all records for a specific group. Requires -l and -g [groupname]
 func fetchGroup(db *sql.DB, AnimalGroup string) {
-    record, err := db.Query("SELECT * FROM bales WHERE AnimalGroup = ?", AnimalGroup)
-    if err != nil {
-      log.Fatal(err)
-    }
+  record, err := db.Query("SELECT * FROM bales WHERE AnimalGroup = ?", AnimalGroup)
+  if err != nil {
+    log.Fatal(err)
+  }
 
-    defer record.Close()
+  defer record.Close()
 
-    totalSlice := []int{}
-    var total int
+  totalSlice := []int{}
+  var total int
+  t := table.NewWriter()
+  t.SetOutputMirror(os.Stdout)
 
-    fmt.Printf("Bales: ID | Date | Group | TypeOfBale | NumOfBales\n")
-    fmt.Println("-----------------------------------------------")
-    for record.Next() {
-        var id int
-        var Date string
-        var AnimalGroup string
-        var TypeOfBale string
-        var NumOfBales int
-        record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
-        totalSlice = append(totalSlice, NumOfBales)
-        fmt.Printf("Bales: %d | %s | %s | %s | %d\n", id, Date, AnimalGroup, TypeOfBale, NumOfBales)
-    }
+  t.AppendHeader(table.Row{"id", "Date", "Group", "TypeOfBale", "NumOfBale"})
+  for record.Next() {
+    var id int
+    var Date string
+    var AnimalGroup string
+    var TypeOfBale string
+    var NumOfBales int
+    record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
+    totalSlice = append(totalSlice, NumOfBales)
+    t.AppendRows([]table.Row{{id, Date, AnimalGroup, TypeOfBale, NumOfBales}})
+  }
 
-    // adds up the slice to tell you the total number of bales
-    for _, num := range totalSlice {
-      total += num
-    }
+  // adds up the slice to tell you the total number of bales
+  for _, num := range totalSlice {
+    total += num
+  }
 
-    fmt.Println("-----------------------------------------------")
-    fmt.Println("Bales:                           Total: ", total)
-    fmt.Println("-----------------------------------------------")
+  t.AppendFooter(table.Row{"", "", "", "Total:", total})
+  t.Render()
 }
 
 // s for give me some (s)pace
