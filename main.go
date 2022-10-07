@@ -24,6 +24,7 @@ import (
   "time"
   "flag"
   "path/filepath"
+  "strings"
 )
 
 // Create database file if doesn't exist
@@ -264,6 +265,98 @@ func fetchBaleType(db *sql.DB,  TypeOfBale string) {
   t.Render()
 }
 
+// Fetches all records for a specific group. Requires -l and -g [groupname]
+func fetchRecordYear(db *sql.DB, year string) {
+  fmt.Println("YEEEEAR")
+  record, err := db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ?", year)
+  if err != nil {
+    log.Fatal(err)
+  }
+
+  defer record.Close()
+
+  totalSlice := []int{}
+  var total int
+  t := table.NewWriter()
+  t.SetOutputMirror(os.Stdout)
+
+  t.AppendHeader(table.Row{"id", "Date", "Group", "TypeOfBale", "NumOfBale"})
+  for record.Next() {
+    var id int
+    var Date string
+    var AnimalGroup string
+    var TypeOfBale string
+    var NumOfBales int
+    record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
+    totalSlice = append(totalSlice, NumOfBales)
+    t.AppendRows([]table.Row{{id, Date, AnimalGroup, TypeOfBale, NumOfBales}})
+  }
+
+  // adds up the slice to tell you the total number of bales
+  for _, num := range totalSlice {
+    total += num
+  }
+
+  t.AppendFooter(table.Row{"", "", "", "Total:", total})
+  t.SetStyle(table.StyleLight)
+  t.Render()
+}
+
+// Fetches all records for a specific group. Requires -l and -y [year] -m [month]
+func fetchRecordMonth(db *sql.DB, year string, month string) {
+  fmt.Println("YEEEEAR, MOOOOONTH")
+  fmt.Println("Month: ", month)
+  contains := strings.Contains(month, "-")
+  months := strings.Split(month, "-")
+  month1 := months[0]
+  month2 := months[1]
+
+  fmt.Println("Contains: ", contains)
+  fmt.Println("Months: ", months)
+  fmt.Println("Month1: ", month1)
+  fmt.Println("Month2: ", month2)
+
+
+  if contains {
+    record, err := db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ? and (strftime('%m', date) between ? and ?)", year, month1, month2)
+    if err != nil {
+      log.Fatal(err)
+    }
+  } else {
+     record, err := db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ? and strftime('%m', date) = ?", year, month)
+    if err != nil {
+      log.Fatal(err)
+    }
+  }
+
+  defer record.Close()
+
+  totalSlice := []int{}
+  var total int
+  t := table.NewWriter()
+  t.SetOutputMirror(os.Stdout)
+
+  t.AppendHeader(table.Row{"id", "Date", "Group", "TypeOfBale", "NumOfBale"})
+  for record.Next() {
+    var id int
+    var Date string
+    var AnimalGroup string
+    var TypeOfBale string
+    var NumOfBales int
+    record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
+    totalSlice = append(totalSlice, NumOfBales)
+    t.AppendRows([]table.Row{{id, Date, AnimalGroup, TypeOfBale, NumOfBales}})
+  }
+
+  // adds up the slice to tell you the total number of bales
+  for _, num := range totalSlice {
+    total += num
+  }
+
+  t.AppendFooter(table.Row{"", "", "", "Total:", total})
+  t.SetStyle(table.StyleLight)
+  t.Render()
+}
 
 // s for give me some (s)pace
 func s() {
@@ -319,8 +412,10 @@ func main() {
   var square bool
   var round bool
   var version bool
-  var group string
   var number int
+  var group string
+  var year string
+  var month string
 
   flag.BoolVar(&info, "i", false, "Prints some information you might need to remember.")
   flag.BoolVar(&list, "l", false, "Prints the Database to terminal. Can add -g [group] to only list the records for a specific group.")
@@ -333,6 +428,8 @@ func main() {
   flag.BoolVar(&pull, "pull", false, "Pulls the databases with git")
   flag.BoolVar(&version, "v", false, "Print the version number and exit.")
   flag.StringVar(&group, "g", "", "The name of the group to add to database.")
+  flag.StringVar(&year, "y", "", "Year to list from database.")
+  flag.StringVar(&month, "m", "", "Month to list from database. Can be a single month(10) or a range (10-12). Requires year (-y).")
   flag.IntVar(&number, "n", 0, "The number of bales to add/ or the id of the record to delete .")
 
   // This changes the help/usage info when -h is used.
@@ -451,9 +548,17 @@ func main() {
       fmt.Println("Date: ", timeStr)
       fetchBaleType(db, "square")
       exit(db, 0)
-    } else if !square && !round && group == ""{
+    } else if !square && !round && group == "" && year == "" && month == "" {
       fmt.Println("Date: ", timeStr)
       fetchRecords(db)
+      exit(db, 0)
+    } else if year != "" && month == "" {
+      fmt.Println("Date: ", timeStr)
+      fetchRecordYear(db, year)
+      exit(db, 0)
+    } else if year != "" && month != "" {
+      fmt.Println("Date: ", timeStr)
+      fetchRecordMonth(db, year, month)
       exit(db, 0)
     } else {
       fmt.Println("You may have used the options wrong. If using -l you can specify group, or baletype. So only one option of -g animal, -s, or -r")
