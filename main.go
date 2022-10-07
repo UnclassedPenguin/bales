@@ -227,6 +227,44 @@ func fetchGroup(db *sql.DB, AnimalGroup string) {
   t.Render()
 }
 
+
+// Fetches all records for a specific group. Requires -l and -g [groupname]
+func fetchBaleType(db *sql.DB,  TypeOfBale string) {
+  record, err := db.Query("SELECT * FROM bales WHERE TypeOfBale = ?", TypeOfBale)
+  if err != nil {
+    log.Fatal(err)
+  }
+
+  defer record.Close()
+
+  totalSlice := []int{}
+  var total int
+  t := table.NewWriter()
+  t.SetOutputMirror(os.Stdout)
+
+  t.AppendHeader(table.Row{"id", "Date", "Group", "TypeOfBale", "NumOfBale"})
+  for record.Next() {
+    var id int
+    var Date string
+    var AnimalGroup string
+    var TypeOfBale string
+    var NumOfBales int
+    record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
+    totalSlice = append(totalSlice, NumOfBales)
+    t.AppendRows([]table.Row{{id, Date, AnimalGroup, TypeOfBale, NumOfBales}})
+  }
+
+  // adds up the slice to tell you the total number of bales
+  for _, num := range totalSlice {
+    total += num
+  }
+
+  t.AppendFooter(table.Row{"", "", "", "Total:", total})
+  t.SetStyle(table.StyleLight)
+  t.Render()
+}
+
+
 // s for give me some (s)pace
 func s() {
   fmt.Print("\n")
@@ -279,6 +317,7 @@ func main() {
   var push bool
   var pull bool
   var square bool
+  var round bool
   var version bool
   var group string
   var number int
@@ -288,7 +327,8 @@ func main() {
   flag.BoolVar(&test, "t", false, "If set, uses the test database.")
   flag.BoolVar(&add, "a", false, "Adds a record to the database. If set, requires -g (group) and -n (number of bales).")
   flag.BoolVar(&del, "d", false, "Deletes a record from the database. If set, requires -n (id number of entry to delete).")
-  flag.BoolVar(&square, "s", false, "Wether it is a square bale or round bale. If set, indicates that the bale is square, else it is round.")
+  flag.BoolVar(&square, "s", false, "If set, indicates that the bale is square. Round is the default. This can be used when adding (-a) a record, or when listing (-l) to specify that you only want to see square bales.")
+  flag.BoolVar(&round, "r", false, "If set, indicates that the bale is round. Round is the default. This can be used when adding (-a) a record, or when listing (-l) to specify that you only want to see round bales.")
   flag.BoolVar(&push, "push", false, "Pushes the databases with git")
   flag.BoolVar(&pull, "pull", false, "Pulls the databases with git")
   flag.BoolVar(&version, "v", false, "Print the version number and exit.")
@@ -298,7 +338,7 @@ func main() {
   // This changes the help/usage info when -h is used.
   flag.Usage = func() {
       w := flag.CommandLine.Output() // may be os.Stderr - but not necessarily
-      fmt.Fprintf(w, "Description of %s:\n\nThis is a program to use to keep track of bales that have been fed.\nIts useful to have the data to see how many bales you go through for the winter.\n\nUsage:\n\nbales [-t] [-l [-g group]] [-a -g group [-s] -n num] [-d -n num]\n\nAvailable arguments:\n", os.Args[0])
+      fmt.Fprintf(w, "Description of %s:\n\nThis is a program to use to keep track of bales that have been fed.\nIts useful to have the data to see how many bales you go through for the winter.\n\nUsage:\n\nbales [-t] [-l [-g group | -s | -r]] [-a -g group [-s | -r] -n num] [-d -n num]\n\nAvailable arguments:\n", os.Args[0])
       flag.PrintDefaults()
       //fmt.Fprintf(w, "...custom postamble ... \n")
   }
@@ -361,11 +401,17 @@ func main() {
 
   // Handles the command line way to add record
   if add && group != "" && number != 0 {
-    if square {
+    if square && !round{
       typeOfBale = "square"
+    } else if round && !square {
+      typeOfBale = "round"
+    } else if square && round {
+      fmt.Println("You can't use -s and -r together! How can a bale be a round and square?")
+      exit(db, 1)
     } else {
       typeOfBale = "round"
     }
+
     fmt.Println("        Date: ", timeStr)
     fmt.Println("       Group: ", group)
     fmt.Println("Type of Bale: ", typeOfBale)
@@ -393,14 +439,25 @@ func main() {
 
   // Handles the command line way to list records
   if list {
-    if group != "" {
+    if group != "" && !round && !square {
       fmt.Println("Date: ", timeStr)
       fetchGroup(db, group)
       exit(db, 0)
-    } else {
+    } else if round && !square && group == "" {
+      fmt.Println("Date: ", timeStr)
+      fetchBaleType(db, "round")
+      exit(db, 0)
+    } else if square && !round && group == "" {
+      fmt.Println("Date: ", timeStr)
+      fetchBaleType(db, "square")
+      exit(db, 0)
+    } else if !square && !round && group == ""{
       fmt.Println("Date: ", timeStr)
       fetchRecords(db)
       exit(db, 0)
+    } else {
+      fmt.Println("You may have used the options wrong. If using -l you can specify group, or baletype. So only one option of -g animal, -s, or -r")
+      exit(db, 1)
     }
   }
 
