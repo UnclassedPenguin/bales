@@ -265,9 +265,8 @@ func fetchBaleType(db *sql.DB,  TypeOfBale string) {
   t.Render()
 }
 
-// Fetches all records for a specific group. Requires -l and -g [groupname]
+// Fetches all records for a specific year. Requires -l and -y [year]
 func fetchRecordYear(db *sql.DB, year string) {
-  fmt.Println("YEEEEAR")
   record, err := db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ?", year)
   if err != nil {
     log.Fatal(err)
@@ -306,6 +305,7 @@ func fetchRecordYear(db *sql.DB, year string) {
 func fetchRecordMonth(db *sql.DB, year string, month string) {
   fmt.Println("YEEEEAR, MOOOOONTH")
   fmt.Println("Month: ", month)
+  var record *sql.Rows
   contains := strings.Contains(month, "-")
   months := strings.Split(month, "-")
   month1 := months[0]
@@ -317,13 +317,14 @@ func fetchRecordMonth(db *sql.DB, year string, month string) {
   fmt.Println("Month2: ", month2)
 
 
+
   if contains {
-    record, err := db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ? and (strftime('%m', date) between ? and ?)", year, month1, month2)
+    record, err = db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ? and (strftime('%m', date) between ? and ?)", year, month1, month2)
     if err != nil {
       log.Fatal(err)
     }
   } else {
-     record, err := db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ? and strftime('%m', date) = ?", year, month)
+     record, err = db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ? and strftime('%m', date) = ?", year, month)
     if err != nil {
       log.Fatal(err)
     }
