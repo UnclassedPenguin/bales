@@ -81,42 +81,6 @@ func deleteRecord(db *sql.DB, id int) {
   }
 }
 
-// This is old way of doing fetchRecords, without go-pretty tables. Will
-// Probably just end up removing it but leaving it for now...
-// Fetches all records from database and prints to screen
-//func fetchRecords(db *sql.DB) {
-    //record, err := db.Query("SELECT * FROM bales")
-    //if err != nil {
-        //log.Fatal(err)
-    //}
-    //defer record.Close()
-
-    //totalSlice := []int{}
-    //var total int
-
-    //fmt.Printf("Bales: ID | Date | Group | TypeOfBale | NumOfBales\n")
-    //fmt.Println("-----------------------------------------------")
-    //for record.Next() {
-        //var id int
-        //var Date string
-        //var AnimalGroup string
-        //var TypeOfBale string
-        //var NumOfBales int
-        //record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
-        //totalSlice = append(totalSlice, NumOfBales)
-        //fmt.Printf("Bales: %d | %s | %s | %s | %d\n", id, Date, AnimalGroup, TypeOfBale, NumOfBales)
-    //}
-
-    //// adds up the slice to tell you the total number of bales
-    //for _, num := range totalSlice {
-      //total += num
-    //}
-
-    //fmt.Println("-----------------------------------------------")
-    //fmt.Println("Bales:                           Total: ", total)
-    //fmt.Println("-----------------------------------------------")
-//}
-
 // Fetches all records from database and prints to screen
 // cmd line option -l (no other arguments)
 func fetchRecords(db *sql.DB) {
@@ -155,43 +119,6 @@ func fetchRecords(db *sql.DB) {
   //t.Style().Options.SeparateRows = true
   t.Render()
 }
-
-// This is old way of doing fetchGroup, without go-pretty tables. Will
-// Probably just end up removing it but leaving it for now...
-// Fetches all records for a specific group. Requires -l and -g [groupname]
-//func fetchGroup(db *sql.DB, AnimalGroup string) {
-    //record, err := db.Query("SELECT * FROM bales WHERE AnimalGroup = ?", AnimalGroup)
-    //if err != nil {
-      //log.Fatal(err)
-    //}
-
-    //defer record.Close()
-
-    //totalSlice := []int{}
-    //var total int
-
-    //fmt.Printf("Bales: ID | Date | Group | TypeOfBale | NumOfBales\n")
-    //fmt.Println("-----------------------------------------------")
-    //for record.Next() {
-        //var id int
-        //var Date string
-        //var AnimalGroup string
-        //var TypeOfBale string
-        //var NumOfBales int
-        //record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
-        //totalSlice = append(totalSlice, NumOfBales)
-        //fmt.Printf("Bales: %d | %s | %s | %s | %d\n", id, Date, AnimalGroup, TypeOfBale, NumOfBales)
-    //}
-
-    //// adds up the slice to tell you the total number of bales
-    //for _, num := range totalSlice {
-      //total += num
-    //}
-
-    //fmt.Println("-----------------------------------------------")
-    //fmt.Println("Bales:                           Total: ", total)
-    //fmt.Println("-----------------------------------------------")
-//}
 
 // Fetches all records for a specific group. 
 // Requires -l and -g [groupname]
@@ -485,12 +412,11 @@ func main() {
   createTable(db)
 
   // How to add entry:
-  // addRecord(db, timeStr, "Goats", 2)
+  // addRecord(db, timeStr, "Goats", "round", 2)
   // How to delete entry:
   // deleteRecord(db, 2) // where 2 is id number of entry
   // How to query entire database
   // fetchRecords(db)
-
 
   var typeOfBale string
 
