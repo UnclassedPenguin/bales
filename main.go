@@ -229,7 +229,7 @@ func fetchGroup(db *sql.DB, AnimalGroup string) {
 }
 
 
-// Fetches all records for a specific group. Requires -l and -g [groupname]
+// Fetches all records for a specific bale type. Requires -l and -r or -s
 func fetchBaleType(db *sql.DB,  TypeOfBale string) {
   record, err := db.Query("SELECT * FROM bales WHERE TypeOfBale = ?", TypeOfBale)
   if err != nil {
@@ -305,20 +305,25 @@ func fetchRecordYear(db *sql.DB, year string) {
 func fetchRecordMonth(db *sql.DB, year string, month string) {
   fmt.Println("YEEEEAR, MOOOOONTH")
   fmt.Println("Month: ", month)
+
   var record *sql.Rows
+  var err error
+
+
   contains := strings.Contains(month, "-")
-  months := strings.Split(month, "-")
-  month1 := months[0]
-  month2 := months[1]
 
   fmt.Println("Contains: ", contains)
-  fmt.Println("Months: ", months)
-  fmt.Println("Month1: ", month1)
-  fmt.Println("Month2: ", month2)
-
 
 
   if contains {
+    months := strings.Split(month, "-")
+    month1 := months[0]
+    month2 := months[1]
+    fmt.Println("Months: ", months)
+    fmt.Println("Month1: ", month1)
+    fmt.Println("Month2: ", month2)
+
+
     record, err = db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ? and (strftime('%m', date) between ? and ?)", year, month1, month2)
     if err != nil {
       log.Fatal(err)
