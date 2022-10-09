@@ -495,42 +495,14 @@ func main() {
 
   // Handles the github push command.
   if push {
-
-    //fmt.Println("This will eventually push to git repo.")
-    //exit(db, 0)
-
-    // pwd
-    //var cmd = exec.Command("pwd")
-    //cmd.Dir = "/home/tyler/git/bales"
-    //output, err := cmd.Output()
-    //if err != nil {
-      //fmt.Println("ERR:\n", err)
-      //exit(db, 1)
-    //} else {
-      //fmt.Println("OUTPUT:\n", string(output))
-      //exit(db, 0)
-    //}
-
     // git add --all
-    //cmd = exec.Command("/usr/bin/git", "add", "--all")
-    //cmd.Dir = "/home/tyler/git/bales"
-    //output, err = cmd.Output()
-    //if err != nil {
-      //fmt.Println("ERR:\n", err)
-      //exit(db, 1)
-    //} else {
-      //fmt.Println("OUTPUT:\n", string(output))
-      //exit(db, 0)
-    //}
-
-    //cmd := exec.Command(`/usr/bin/git`,[]string{"add","--all"}...)
     cmd, stdout := exec.Command("git", "add", "--all"), new(strings.Builder)
     cmd.Dir = "/home/tyler/git/bales"
     cmd.Stdout = stdout
     err := cmd.Run()
     if err != nil {
       fmt.Println("ERR:", err)
-      os.Exit(1)
+      exit(db, 1)
     }
     fmt.Println(stdout.String())
 
@@ -541,31 +513,40 @@ func main() {
     err = cmd.Run()
     if err != nil {
       fmt.Println("ERR:", err)
-      os.Exit(1)
+      exit(db, 1)
     }
     fmt.Println(stdout.String())
 
     // git push
-    //cmd, stdout = exec.Command("git", "push"), new(strings.Builder)
-    //cmd.Dir = "/home/tyler/git/bales"
-    //cmd.Stdout = stdout
-    //err = cmd.Run()
-    //if err != nil {
-      //fmt.Println("ERR:", err)
-      //os.Exit(1)
-    //}
-    //fmt.Println(stdout.String())
-
+    cmd, stdout = exec.Command("git", "push"), new(strings.Builder)
+    cmd.Dir = "/home/tyler/git/bales"
+    cmd.Stdout = stdout
+    err = cmd.Run()
+    if err != nil {
+      fmt.Println("ERR:", err)
+      exit(db, 1)
+    }
+    fmt.Println(stdout.String())
 
     // exit
+    exit(db, 0)
 
   }
 
   // Handles the github pull command.
   if pull {
-    fmt.Println("This will eventually handle pull from git repo.")
+    // git pull 
+    cmd, stdout := exec.Command("git", "pull"), new(strings.Builder)
+    cmd.Dir = "/home/tyler/git/bales"
+    cmd.Stdout = stdout
+    err := cmd.Run()
+    if err != nil {
+      fmt.Println("ERR:", err)
+      exit(db, 1)
+    }
+    fmt.Println(stdout.String())
+
     exit(db, 0)
-    // git pull
   }
 
   // This runs if no arguments are specified. 
