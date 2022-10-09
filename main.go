@@ -395,6 +395,9 @@ func main() {
       panic(err)
   }
 
+  // I use this directory in the git section near the end
+  directory := filepath.Join(home, "git/bales")
+
   // Says whether to use the test database or the real database. 
   // Set with -t 
   if test {
@@ -498,7 +501,7 @@ func main() {
   if push {
     // git add --all
     cmd, stdout := exec.Command("git", "add", "--all"), new(strings.Builder)
-    cmd.Dir = "/home/tyler/git/bales"
+    cmd.Dir = directory
     cmd.Stdout = stdout
     err := cmd.Run()
     if err != nil {
@@ -509,7 +512,7 @@ func main() {
 
     // git commit -m 'update database'
     cmd, stdout = exec.Command("git", "commit", "-m", "'update database'"), new(strings.Builder)
-    cmd.Dir = "/home/tyler/git/bales"
+    cmd.Dir = directory
     cmd.Stdout = stdout
     err = cmd.Run()
     if err != nil {
@@ -520,7 +523,7 @@ func main() {
 
     // git push
     cmd, stdout, stderr := exec.Command("git", "push"), new(strings.Builder), new(strings.Builder)
-    cmd.Dir = "/home/tyler/git/bales"
+    cmd.Dir = directory
     cmd.Stdout = stdout
     cmd.Stderr = stderr
     err = cmd.Run()
@@ -541,7 +544,7 @@ func main() {
   if pull {
     // git pull 
     cmd, stdout := exec.Command("git", "pull"), new(strings.Builder)
-    cmd.Dir = "/home/tyler/git/bales"
+    cmd.Dir = directory
     cmd.Stdout = stdout
     err := cmd.Run()
     if err != nil {
@@ -558,7 +561,7 @@ func main() {
   if status {
     // git status 
     cmd, stdout := exec.Command("git", "status"), new(strings.Builder)
-    cmd.Dir = "/home/tyler/git/bales"
+    cmd.Dir = directory
     cmd.Stdout = stdout
     err := cmd.Run()
     if err != nil {
