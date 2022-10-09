@@ -293,7 +293,7 @@ func s() {
 func exit(db *sql.DB, status int) {
   db.Close()
   s()
-  fmt.Println("Thanks, Bye!")
+  fmt.Printf("bales: exit (%d)\n", status)
   os.Exit(status)
   s()
 }
