@@ -530,6 +530,8 @@ func main() {
     }
     fmt.Println(stdout.String())
 
+    // Unsatisfactory confirmation message
+    fmt.Println("You probably pushed it to git...")
     // exit
     exit(db, 0)
 
