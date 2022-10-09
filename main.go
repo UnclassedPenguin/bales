@@ -295,7 +295,6 @@ func exit(db *sql.DB, status int) {
   //s()
   fmt.Printf("bales: exit (%d)\n", status)
   os.Exit(status)
-  s()
 }
 
 // for flag -i. Should add some more useful (i)nfo here,
