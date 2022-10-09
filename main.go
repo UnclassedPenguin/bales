@@ -549,6 +549,7 @@ func main() {
     }
     fmt.Println(stdout.String())
 
+    // exit
     exit(db, 0)
   }
 
@@ -565,6 +566,7 @@ func main() {
     }
     fmt.Println(stdout.String())
 
+    // exit
     exit(db, 0)
   }
 
