@@ -324,6 +324,7 @@ const testDb = "test-database.db"
 // Main Function
 func main() {
 
+  programName := os.Args[0]
   var databaseToUse string
 
   // Flags
@@ -502,110 +503,6 @@ func main() {
     exit(db, 0)
   }
 
-  programName := os.Args[0]
-  fmt.Printf("%s: No arguements specified. Try -h for help.", programName)
-   //User interaction starts here
-  //var userChoice int
-
-   //Main loop starts here if no command line options are used (except -t.)
-  //for true {
-    //fmt.Println("Date: ", timeStr)
-    //s()
-    //fmt.Println("What would you like to do? (1, 2, 3, 4)")
-    //fmt.Println("1) Add Record")
-    //fmt.Println("2) Delete Record")
-    //fmt.Println("3) Print Records")
-    //fmt.Println("4) exit")
-    //fmt.Print(" > ")
-    //fmt.Scan(&userChoice)
-
-    //switch userChoice {
-      //case 1:
-        //for true {
-          //var group string
-          //var numOfBales int
-          //var cont string
-          //var baletype string
-
-          //s()
-          //fmt.Println("What group is this for?(sheep, bgoats, lgoats, horse, bulls, cows)")
-          //fmt.Print(" > ")
-          //fmt.Scan(&group)
-
-          //s()
-          //fmt.Println("What type of bale? (s or r)")
-          //fmt.Println("s) square")
-          //fmt.Println("r) round")
-          //fmt.Print(" > ")
-          //fmt.Scan(&baletype)
-
-          //if baletype == "s" {
-            //typeOfBale = "square"
-          //} else {
-            //typeOfBale = "round"
-          //}
-
-          //s()
-          //fmt.Println("How many bales?")
-          //fmt.Print(" > ")
-          //fmt.Scan(&numOfBales)
-
-          //s()
-          //fmt.Println("Adding Record...")
-          //addRecord(db, timeStr, group, typeOfBale, numOfBales)
-          //fmt.Println("Record Added!")
-          //s()
-
-          //fmt.Println("Would you like to add another record? (Y or n)")
-          //fmt.Print(" > ")
-          //fmt.Scan(&cont)
-
-          //if cont == "n" {
-            //exit(db, 0)
-          //} else if cont == "" {
-            //continue
-          //}
-
-        //}
-
-        //exit(db, 0)
-
-      //case 2:
-        //for true {
-          //var recordToDelete int
-          //var cont string
-
-          //fmt.Println("Which record would you like to Delete?")
-          //fmt.Print(" > ")
-          //fmt.Scan(&recordToDelete)
-
-          //s()
-          //fmt.Println("Deleting Record...")
-          //deleteRecord(db, recordToDelete)
-          //fmt.Println("Record Deleted!")
-          //s()
-
-          //fmt.Println("Would you like to delete another record? (Y or n)")
-          //fmt.Print(" > ")
-          //fmt.Scan(&cont)
-
-          //if cont == "n" {
-            //exit(db, 0)
-          //}
-        //}
-
-      //case 3:
-        //s()
-        //fetchRecords(db)
-        //exit(db, 0)
-
-      //case 4:
-        //exit(db, 0)
-
-      //default:
-        //s()
-        //fmt.Println("Please enter a valid option...")
-        //s()
-    //}
-  //}
+  // This runs if no arguments are specified. 
+  fmt.Printf("%s: No arguments specified. Try -h for help.\n", programName)
 }
