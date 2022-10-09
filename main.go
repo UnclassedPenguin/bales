@@ -565,7 +565,6 @@ func main() {
     fmt.Println(stdout.String())
 
     exit(db, 0)
-
   }
 
   // This runs if no arguments are specified. 
