@@ -16,7 +16,6 @@ package main
 
 import (
   "fmt"
-  //"bytes"
   "os"
   "os/exec"
   "database/sql"
