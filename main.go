@@ -16,7 +16,9 @@ package main
 
 import (
   "fmt"
+  //"bytes"
   "os"
+  "os/exec"
   "database/sql"
   _ "github.com/mattn/go-sqlite3"
   "github.com/jedib0t/go-pretty/v6/table"
@@ -493,14 +495,77 @@ func main() {
 
   // Handles the github push command.
   if push {
-    fmt.Println("This will eventually push to git repo.")
-    exit(db, 0)
+
+    //fmt.Println("This will eventually push to git repo.")
+    //exit(db, 0)
+
+    // pwd
+    //var cmd = exec.Command("pwd")
+    //cmd.Dir = "/home/tyler/git/bales"
+    //output, err := cmd.Output()
+    //if err != nil {
+      //fmt.Println("ERR:\n", err)
+      //exit(db, 1)
+    //} else {
+      //fmt.Println("OUTPUT:\n", string(output))
+      //exit(db, 0)
+    //}
+
+    // git add --all
+    //cmd = exec.Command("/usr/bin/git", "add", "--all")
+    //cmd.Dir = "/home/tyler/git/bales"
+    //output, err = cmd.Output()
+    //if err != nil {
+      //fmt.Println("ERR:\n", err)
+      //exit(db, 1)
+    //} else {
+      //fmt.Println("OUTPUT:\n", string(output))
+      //exit(db, 0)
+    //}
+
+    //cmd := exec.Command(`/usr/bin/git`,[]string{"add","--all"}...)
+    cmd, stdout := exec.Command("git", "add", "--all"), new(strings.Builder)
+    cmd.Dir = "/home/tyler/git/bales"
+    cmd.Stdout = stdout
+    err := cmd.Run()
+    if err != nil {
+      fmt.Println("ERR:", err)
+      os.Exit(1)
+    }
+    fmt.Println(stdout.String())
+
+    // git commit -m 'update database'
+    cmd, stdout = exec.Command("git", "commit", "-m", "'update database'"), new(strings.Builder)
+    cmd.Dir = "/home/tyler/git/bales"
+    cmd.Stdout = stdout
+    err = cmd.Run()
+    if err != nil {
+      fmt.Println("ERR:", err)
+      os.Exit(1)
+    }
+    fmt.Println(stdout.String())
+
+    // git push
+    //cmd, stdout = exec.Command("git", "push"), new(strings.Builder)
+    //cmd.Dir = "/home/tyler/git/bales"
+    //cmd.Stdout = stdout
+    //err = cmd.Run()
+    //if err != nil {
+      //fmt.Println("ERR:", err)
+      //os.Exit(1)
+    //}
+    //fmt.Println(stdout.String())
+
+
+    // exit
+
   }
 
   // Handles the github pull command.
   if pull {
     fmt.Println("This will eventually handle pull from git repo.")
     exit(db, 0)
+    // git pull
   }
 
   // This runs if no arguments are specified. 
