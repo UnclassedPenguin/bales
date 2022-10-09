@@ -534,7 +534,7 @@ func main() {
 
     // Unsatisfactory confirmation message
     fmt.Println("You probably pushed it to git...")
-    // exit
+    // Exit
     exit(db, 0)
   }
 
