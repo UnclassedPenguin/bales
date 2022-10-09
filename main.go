@@ -520,15 +520,17 @@ func main() {
     fmt.Println(stdout.String())
 
     // git push
-    cmd, stdout = exec.Command("git", "push"), new(strings.Builder)
+    cmd, stdout, stderr := exec.Command("git", "push"), new(strings.Builder), new(strings.Builder)
     cmd.Dir = "/home/tyler/git/bales"
     cmd.Stdout = stdout
+    cmd.Stderr = stderr
     err = cmd.Run()
     if err != nil {
       fmt.Println("ERR:", err)
       exit(db, 1)
     }
     fmt.Println(stdout.String())
+    fmt.Println(stderr.String())
 
     // Unsatisfactory confirmation message
     fmt.Println("You probably pushed it to git...")
