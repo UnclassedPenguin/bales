@@ -337,6 +337,7 @@ func main() {
   var del bool
   var push bool
   var pull bool
+  var status bool
   var square bool
   var round bool
   var version bool
@@ -352,8 +353,9 @@ func main() {
   flag.BoolVar(&del, "d", false, "Deletes a record from the database. If set, requires -n (id number of entry to delete).")
   flag.BoolVar(&square, "s", false, "If set, indicates that the bale is square. Round is the default. This can be used when adding (-a) a record, or when listing (-l) to specify that you only want to see square bales.")
   flag.BoolVar(&round, "r", false, "If set, indicates that the bale is round. Round is the default. This can be used when adding (-a) a record, or when listing (-l) to specify that you only want to see round bales.")
-  flag.BoolVar(&push, "push", false, "Pushes the databases with git")
-  flag.BoolVar(&pull, "pull", false, "Pulls the databases with git")
+  flag.BoolVar(&push, "push", false, "Pushes the databases with git.")
+  flag.BoolVar(&pull, "pull", false, "Pulls the databases with git.")
+  flag.BoolVar(&status, "status", false, "Checks the git status on project.")
   flag.BoolVar(&version, "v", false, "Print the version number and exit.")
   flag.StringVar(&group, "g", "", "The name of the group to add to database.")
   flag.StringVar(&year, "y", "", "Year to list from database.")
@@ -547,6 +549,23 @@ func main() {
     fmt.Println(stdout.String())
 
     exit(db, 0)
+  }
+
+  // Handles the github status command.
+  if status {
+    // git status 
+    cmd, stdout := exec.Command("git", "status"), new(strings.Builder)
+    cmd.Dir = "/home/tyler/git/bales"
+    cmd.Stdout = stdout
+    err := cmd.Run()
+    if err != nil {
+      fmt.Println("ERR:", err)
+      exit(db, 1)
+    }
+    fmt.Println(stdout.String())
+
+    exit(db, 0)
+
   }
 
   // This runs if no arguments are specified. 
