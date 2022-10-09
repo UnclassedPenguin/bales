@@ -534,7 +534,6 @@ func main() {
     fmt.Println("You probably pushed it to git...")
     // exit
     exit(db, 0)
-
   }
 
   // Handles the github pull command.
