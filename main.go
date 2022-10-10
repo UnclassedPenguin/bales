@@ -241,7 +241,7 @@ func main() {
   if test {
     databaseToUse = testDb
   } else {
-    databaseToUse = realDb 
+    databaseToUse = realDb
   }
 
   // Creates database if it hasn't been created yet.
