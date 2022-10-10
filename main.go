@@ -82,10 +82,8 @@ func deleteRecord(db *sql.DB, id int) {
   }
 }
 
-// Fetches all records from database and prints to screen
-// cmd line option -l (no other arguments)
-func fetchRecords(db *sql.DB) {
-  record, err := db.Query("SELECT * FROM bales")
+// Fetches a record from database
+func fetchRecord(db *sql.DB, record *sql.Rows, err error) {
   if err != nil {
     log.Fatal(err)
   }
@@ -118,169 +116,6 @@ func fetchRecords(db *sql.DB) {
   t.SetStyle(table.StyleLight)
   // This separates rows...Not sure I like it, leave it for now.
   //t.Style().Options.SeparateRows = true
-  t.Render()
-}
-
-// Fetches all records for a specific group. 
-// Requires -l and -g [groupname]
-func fetchGroup(db *sql.DB, AnimalGroup string) {
-  record, err := db.Query("SELECT * FROM bales WHERE AnimalGroup = ?", AnimalGroup)
-  if err != nil {
-    log.Fatal(err)
-  }
-
-  defer record.Close()
-
-  totalSlice := []int{}
-  var total int
-  t := table.NewWriter()
-  t.SetOutputMirror(os.Stdout)
-
-  t.AppendHeader(table.Row{"id", "Date", "Group", "TypeOfBale", "NumOfBale"})
-  for record.Next() {
-    var id int
-    var Date string
-    var AnimalGroup string
-    var TypeOfBale string
-    var NumOfBales int
-    record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
-    totalSlice = append(totalSlice, NumOfBales)
-    t.AppendRows([]table.Row{{id, Date, AnimalGroup, TypeOfBale, NumOfBales}})
-  }
-
-  // adds up the slice to tell you the total number of bales
-  for _, num := range totalSlice {
-    total += num
-  }
-
-  t.AppendFooter(table.Row{"", "", "", "Total:", total})
-  t.SetStyle(table.StyleLight)
-  t.Render()
-}
-
-// Fetches all records for a specific bale type. 
-// Requires -l and -r or -s
-func fetchBaleType(db *sql.DB,  TypeOfBale string) {
-  record, err := db.Query("SELECT * FROM bales WHERE TypeOfBale = ?", TypeOfBale)
-  if err != nil {
-    log.Fatal(err)
-  }
-
-  defer record.Close()
-
-  totalSlice := []int{}
-  var total int
-  t := table.NewWriter()
-  t.SetOutputMirror(os.Stdout)
-
-  t.AppendHeader(table.Row{"id", "Date", "Group", "TypeOfBale", "NumOfBale"})
-  for record.Next() {
-    var id int
-    var Date string
-    var AnimalGroup string
-    var TypeOfBale string
-    var NumOfBales int
-    record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
-    totalSlice = append(totalSlice, NumOfBales)
-    t.AppendRows([]table.Row{{id, Date, AnimalGroup, TypeOfBale, NumOfBales}})
-  }
-
-  // adds up the slice to tell you the total number of bales
-  for _, num := range totalSlice {
-    total += num
-  }
-
-  t.AppendFooter(table.Row{"", "", "", "Total:", total})
-  t.SetStyle(table.StyleLight)
-  t.Render()
-}
-
-// Fetches all records for a specific year. 
-// Requires -l and -y [year]
-func fetchRecordYear(db *sql.DB, year string) {
-  record, err := db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ?", year)
-  if err != nil {
-    log.Fatal(err)
-  }
-
-  defer record.Close()
-
-  totalSlice := []int{}
-  var total int
-  t := table.NewWriter()
-  t.SetOutputMirror(os.Stdout)
-
-  t.AppendHeader(table.Row{"id", "Date", "Group", "TypeOfBale", "NumOfBale"})
-  for record.Next() {
-    var id int
-    var Date string
-    var AnimalGroup string
-    var TypeOfBale string
-    var NumOfBales int
-    record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
-    totalSlice = append(totalSlice, NumOfBales)
-    t.AppendRows([]table.Row{{id, Date, AnimalGroup, TypeOfBale, NumOfBales}})
-  }
-
-  // adds up the slice to tell you the total number of bales
-  for _, num := range totalSlice {
-    total += num
-  }
-
-  t.AppendFooter(table.Row{"", "", "", "Total:", total})
-  t.SetStyle(table.StyleLight)
-  t.Render()
-}
-
-// Fetches all records for a specific year and month (either single 10 or range 10-12).
-// Requires -l and -y [year] -m [month]
-func fetchRecordMonth(db *sql.DB, year string, month string) {
-  var record *sql.Rows
-  var err error
-  contains := strings.Contains(month, "-")
-
-  if contains {
-    months := strings.Split(month, "-")
-    month1 := months[0]
-    month2 := months[1]
-
-    record, err = db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ? and (strftime('%m', date) between ? and ?)", year, month1, month2)
-    if err != nil {
-      log.Fatal(err)
-    }
-  } else {
-     record, err = db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ? and strftime('%m', date) = ?", year, month)
-    if err != nil {
-      log.Fatal(err)
-    }
-  }
-
-  defer record.Close()
-
-  totalSlice := []int{}
-  var total int
-  t := table.NewWriter()
-  t.SetOutputMirror(os.Stdout)
-
-  t.AppendHeader(table.Row{"id", "Date", "Group", "TypeOfBale", "NumOfBale"})
-  for record.Next() {
-    var id int
-    var Date string
-    var AnimalGroup string
-    var TypeOfBale string
-    var NumOfBales int
-    record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
-    totalSlice = append(totalSlice, NumOfBales)
-    t.AppendRows([]table.Row{{id, Date, AnimalGroup, TypeOfBale, NumOfBales}})
-  }
-
-  // adds up the slice to tell you the total number of bales
-  for _, num := range totalSlice {
-    total += num
-  }
-
-  t.AppendFooter(table.Row{"", "", "", "Total:", total})
-  t.SetStyle(table.StyleLight)
   t.Render()
 }
 
@@ -324,7 +159,6 @@ const testDb = "test-database.db"
 // Main Function
 func main() {
 
-  programName := os.Args[0]
   var databaseToUse string
 
   // Flags
@@ -465,36 +299,89 @@ func main() {
   }
 
   // Handles the command line way to list records
+  //if list {
+    //if group != "" && !round && !square {
+      //fmt.Println("Date: ", timeStr)
+      //fetchGroup(db, group)
+      //exit(db, 0)
+    //} else if round && !square && group == "" {
+      //fmt.Println("Date: ", timeStr)
+      //fetchBaleType(db, "round")
+      //exit(db, 0)
+    //} else if square && !round && group == "" {
+      //fmt.Println("Date: ", timeStr)
+      //fetchBaleType(db, "square")
+      //exit(db, 0)
+    //} else if !square && !round && group == "" && year == "" && month == "" {
+      //fmt.Println("Date: ", timeStr)
+      //fetchRecords(db)
+      //exit(db, 0)
+    //} else if year != "" && month == "" {
+      //fmt.Println("Date: ", timeStr)
+      //fetchRecordYear(db, year)
+      //exit(db, 0)
+    //} else if year != "" && month != "" {
+      //fmt.Println("Date: ", timeStr)
+      //fetchRecordMonth(db, year, month)
+      //exit(db, 0)
+    //} else {
+      //fmt.Println("You may have used the options wrong. If using -l you can specify group, or baletype. So only one option of -g animal, -s, or -r")
+      //exit(db, 1)
+    //}
+  //}
+
+  // Handles the command line way to list records
   if list {
     if group != "" && !round && !square {
       fmt.Println("Date: ", timeStr)
-      fetchGroup(db, group)
+      record, err := db.Query("SELECT * FROM bales WHERE AnimalGroup = ?", group)
+      fetchRecord(db, record, err)
       exit(db, 0)
     } else if round && !square && group == "" {
       fmt.Println("Date: ", timeStr)
-      fetchBaleType(db, "round")
+      record, err := db.Query("SELECT * FROM bales WHERE TypeOfBale = 'round'")
+      fetchRecord(db, record, err)
       exit(db, 0)
     } else if square && !round && group == "" {
       fmt.Println("Date: ", timeStr)
-      fetchBaleType(db, "square")
+      record, err := db.Query("SELECT * FROM bales WHERE TypeOfBale = 'square'")
+      fetchRecord(db, record, err)
       exit(db, 0)
     } else if !square && !round && group == "" && year == "" && month == "" {
       fmt.Println("Date: ", timeStr)
-      fetchRecords(db)
+      record, err := db.Query("SELECT * FROM bales")
+      fetchRecord(db, record, err)
       exit(db, 0)
     } else if year != "" && month == "" {
       fmt.Println("Date: ", timeStr)
-      fetchRecordYear(db, year)
+      record, err := db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ?", year)
+      fetchRecord(db, record, err)
       exit(db, 0)
     } else if year != "" && month != "" {
       fmt.Println("Date: ", timeStr)
-      fetchRecordMonth(db, year, month)
+
+      var record *sql.Rows
+      var err error
+      contains := strings.Contains(month, "-")
+
+      if contains {
+        months := strings.Split(month, "-")
+        month1 := months[0]
+        month2 := months[1]
+
+        record, err = db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ? and (strftime('%m', date) between ? and ?)", year, month1, month2)
+      } else {
+         record, err = db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ? and strftime('%m', date) = ?", year, month)
+      }
+
+      fetchRecord(db, record, err)
       exit(db, 0)
     } else {
       fmt.Println("You may have used the options wrong. If using -l you can specify group, or baletype. So only one option of -g animal, -s, or -r")
       exit(db, 1)
     }
   }
+
 
   // Handles the github push command.
   if push {
@@ -573,6 +460,6 @@ func main() {
     exit(db, 0)
   }
 
-  // This runs if no arguments are specified. 
-  fmt.Printf("%s: No arguments specified. Try -h for help.\n", programName)
+  // This runs if no arguments are specified. Prints help usage.
+  flag.Usage()
 }
