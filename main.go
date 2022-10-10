@@ -132,7 +132,7 @@ func exit(db *sql.DB, status int) {
   os.Exit(status)
 }
 
-// for flag -i. Should add some more useful (i)nfo here,
+// For flag -i. Should add some more useful (i)nfo here,
 // but this is helpful for now.
 func printInfo() {
   fmt.Println("UnclassedPenguin Bale Tracker")
@@ -142,7 +142,7 @@ func printInfo() {
   os.Exit(0)
 }
 
-// for flag -v. Print version info
+// For flag -v. Print version info
 func printVersion() {
   fmt.Println("UnclassedPenguin Bale Tracker")
   fmt.Println("v0.1.1")
@@ -297,38 +297,6 @@ func main() {
     fmt.Println("Requires -n (ID number of record to delete)! Try again, or try -h for help.")
     exit(db, 1)
   }
-
-  // Handles the command line way to list records
-  //if list {
-    //if group != "" && !round && !square {
-      //fmt.Println("Date: ", timeStr)
-      //fetchGroup(db, group)
-      //exit(db, 0)
-    //} else if round && !square && group == "" {
-      //fmt.Println("Date: ", timeStr)
-      //fetchBaleType(db, "round")
-      //exit(db, 0)
-    //} else if square && !round && group == "" {
-      //fmt.Println("Date: ", timeStr)
-      //fetchBaleType(db, "square")
-      //exit(db, 0)
-    //} else if !square && !round && group == "" && year == "" && month == "" {
-      //fmt.Println("Date: ", timeStr)
-      //fetchRecords(db)
-      //exit(db, 0)
-    //} else if year != "" && month == "" {
-      //fmt.Println("Date: ", timeStr)
-      //fetchRecordYear(db, year)
-      //exit(db, 0)
-    //} else if year != "" && month != "" {
-      //fmt.Println("Date: ", timeStr)
-      //fetchRecordMonth(db, year, month)
-      //exit(db, 0)
-    //} else {
-      //fmt.Println("You may have used the options wrong. If using -l you can specify group, or baletype. So only one option of -g animal, -s, or -r")
-      //exit(db, 1)
-    //}
-  //}
 
   // Handles the command line way to list records
   if list {
