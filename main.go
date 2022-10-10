@@ -177,6 +177,7 @@ func main() {
   var group string
   var year string
   var month string
+  var custom string
 
   flag.BoolVar(&info, "i", false, "Prints some information you might need to remember.")
   flag.BoolVar(&list, "l", false, "Prints the Database to terminal. Can add -g [group] to only list the records for a specific group.")
@@ -192,6 +193,7 @@ func main() {
   flag.StringVar(&group, "g", "", "The name of the group to add to database.")
   flag.StringVar(&year, "y", "", "Year to list from database.")
   flag.StringVar(&month, "m", "", "Month to list from database. Can be a single month(10) or a range (10-12). Requires year (-y).")
+  flag.StringVar(&custom, "c", "", "Custom SQL request. Requires -l.")
   flag.IntVar(&number, "n", 0, "The number of bales to add/ or the id of the record to delete .")
 
   // This changes the help/usage info when -h is used.
@@ -303,6 +305,11 @@ func main() {
     if group != "" && !round && !square {
       fmt.Println("Date: ", timeStr)
       record, err := db.Query("SELECT * FROM bales WHERE AnimalGroup = ?", group)
+      fetchRecord(db, record, err)
+      exit(db, 0)
+    } else if custom != "" {
+      fmt.Println("Date: ", timeStr)
+      record, err := db.Query(custom)
       fetchRecord(db, record, err)
       exit(db, 0)
     } else if round && !square && group == "" {
