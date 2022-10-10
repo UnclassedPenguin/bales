@@ -83,6 +83,7 @@ func deleteRecord(db *sql.DB, id int) {
 }
 
 // Fetches a record from database
+// Uses go-pretty tables to print it out pretty.
 func fetchRecord(db *sql.DB, record *sql.Rows, err error) {
   if err != nil {
     log.Fatal(err)
@@ -125,6 +126,7 @@ func s() {
 }
 
 // Exits. Obvious,  yeah?
+// Closes the database
 func exit(db *sql.DB, status int) {
   db.Close()
   //s()
@@ -153,7 +155,7 @@ func printVersion() {
 
 // Global variable for databases. One for real, and one to test 
 // things with, that has garbage data in it.
-const fileName = "database.db"
+const realDb = "database.db"
 const testDb = "test-database.db"
 
 
@@ -239,7 +241,7 @@ func main() {
   if test {
     databaseToUse = testDb
   } else {
-    databaseToUse = fileName
+    databaseToUse = realDb 
   }
 
   // Creates database if it hasn't been created yet.
