@@ -1,5 +1,5 @@
 To-do:
-  - Add ability to send custom command to list.
+  - ~~Add ability to send custom sql command to list.~~
   - ~~Add flag to pull/push from git to update database~~
     - Finally got this figured out...
   - ~~Add ability to get entries from date range. Maybe separate by year/month. Individual or range. have to be year and month....~~
