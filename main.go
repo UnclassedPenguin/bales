@@ -193,7 +193,7 @@ func main() {
   flag.StringVar(&group, "g", "", "The name of the group to add to database.")
   flag.StringVar(&year, "y", "", "Year to list from database.")
   flag.StringVar(&month, "m", "", "Month to list from database. Can be a single month(10) or a range (10-12). Requires year (-y).")
-  flag.StringVar(&custom, "c", "", "Custom SQL request. Requires -l.")
+  flag.StringVar(&custom, "c", "", "Custom SQL request. Requires -l. Example:\nbales -t -l -c \"SELECT * FROM bales WHERE strftime('%d', date) BETWEEN '01' AND '03'\"")
   flag.IntVar(&number, "n", 0, "The number of bales to add/ or the id of the record to delete .")
 
   // This changes the help/usage info when -h is used.
