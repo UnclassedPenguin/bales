@@ -139,6 +139,7 @@ func printInfo() {
   fmt.Println("")
   fmt.Println("Groups: sheep, bgoats, lgoats, horse, bulls, cows")
   fmt.Println("Types of bales: square, round")
+  fmt.Println("Sql Columns: id, Date, AnimalGroup, TypeOfBale, NumOfBales")
   os.Exit(0)
 }
 
