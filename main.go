@@ -227,6 +227,7 @@ func main() {
   // This is needed so a database isn't created where you execute from 
   // (I have the executable soft linked to to a command in ~/.bin)
   // Keeps the database in the project directory
+  // I might change this to a variable from a config file. Thoughts?
   home, _ := os.UserHomeDir()
   err := os.Chdir(filepath.Join(home, "git/bales/"))
   if err != nil {
