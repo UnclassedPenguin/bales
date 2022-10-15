@@ -233,7 +233,7 @@ func main() {
 
   var timeStr string
 
-  // Get Current Date 
+  // Get either Current Date or a date entered as a command line option
   if date == "" {
     t := time.Now()
     timeStr = t.Format("2006-01-02")
@@ -241,12 +241,15 @@ func main() {
     timeStr = date
   }
 
+  // Use regexp to check date to make sure it is a valid yyyy-mm-dd date
   dateCheck, err := regexp.MatchString("\\d\\d\\d\\d-\\d\\d-\\d\\d", timeStr)
   if err != nil {
     fmt.Println("Error in dateCheck: ", err)
     os.Exit(1)
   }
 
+  // If Regexp check fails, print error and exit, prompting user to use a proper
+  // format for date
   if !dateCheck {
     fmt.Println("Error:")
     fmt.Println("It seems your date isn't the proper format. Please enter date as YYYY-MM-DD ie 2022-01-12")
