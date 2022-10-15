@@ -26,6 +26,7 @@ import (
   "flag"
   "path/filepath"
   "strings"
+  "regexp"
 )
 
 // Create database file if doesn't exist
@@ -240,13 +241,25 @@ func main() {
     timeStr = date
   }
 
+  dateCheck, err := regexp.MatchString("\\d\\d\\d\\d-\\d\\d-\\d\\d", timeStr)
+  if err != nil {
+    fmt.Println("Error in dateCheck: ", err)
+    os.Exit(1)
+  }
+
+  if !dateCheck {
+    fmt.Println("Error:")
+    fmt.Println("It seems your date isn't the proper format. Please enter date as YYYY-MM-DD")
+    os.Exit(1)
+  }
+
   // Change dir to project directory
   // This is needed so a database isn't created where you execute from 
   // (I have the executable soft linked to to a command in ~/.bin)
   // Keeps the database in the project directory
   // I might change this to a variable from a config file. Thoughts?
   home, _ := os.UserHomeDir()
-  err := os.Chdir(filepath.Join(home, "git/bales/"))
+  err = os.Chdir(filepath.Join(home, "git/bales/"))
   if err != nil {
       panic(err)
   }
