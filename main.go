@@ -145,6 +145,13 @@ func printInfo() {
   os.Exit(0)
 }
 
+// Function to use for debugging or things
+func debugFunction(timeStr string) {
+  fmt.Printf("Date: ", timeStr)
+  fmt.Printf("DateType: %T", timeStr)
+  os.Exit(0)
+}
+
 // For flag -v. Print version info
 func printVersion() {
   fmt.Println("UnclassedPenguin Bale Tracker")
@@ -176,10 +183,12 @@ func main() {
   var square bool
   var round bool
   var version bool
+  var debug bool
   var number int
   var group string
   var year string
   var month string
+  var date string
   var custom string
 
   flag.BoolVar(&info, "i", false, "Prints some information you might need to remember.")
@@ -193,9 +202,11 @@ func main() {
   flag.BoolVar(&pull, "pull", false, "Pulls the databases with git.")
   flag.BoolVar(&status, "status", false, "Checks the git status on project.")
   flag.BoolVar(&version, "v", false, "Print the version number and exit.")
+  flag.BoolVar(&debug, "debug", false, "Execute function for debugging.")
   flag.StringVar(&group, "g", "", "The name of the group to add to database.")
   flag.StringVar(&year, "y", "", "Year to list from database.")
   flag.StringVar(&month, "m", "", "Month to list from database. Can be a single month(10) or a range (10-12). Requires year (-y).")
+  flag.StringVar(&date, "date", "", "The date to put into the database, if not today. yyyy-mm-dd")
   flag.StringVar(&custom, "c", "", "Custom SQL request. Requires -l. Example:\nbales -t -l -c \"SELECT * FROM bales WHERE strftime('%d', date) BETWEEN '01' AND '03'\"")
   flag.IntVar(&number, "n", 0, "The number of bales to add/ or the id of the record to delete .")
 
@@ -219,9 +230,15 @@ func main() {
     printVersion()
   }
 
+  var timeStr string
+
   // Get Current Date 
-  t := time.Now()
-  timeStr := t.Format("2006-01-02")
+  if date == "" {
+    t := time.Now()
+    timeStr = t.Format("2006-01-02")
+  } else {
+    timeStr = date
+  }
 
   // Change dir to project directory
   // This is needed so a database isn't created where you execute from 
