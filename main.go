@@ -401,7 +401,7 @@ func main() {
     err := cmd.Run()
     if err != nil {
       fmt.Println("ERR:", err)
-      fmt.Println("Are you sure there is anything to git add?")
+      fmt.Println("Error executing git add --all")
       exit(db, 1)
     }
     fmt.Println(stdout.String())
@@ -413,6 +413,7 @@ func main() {
     err = cmd.Run()
     if err != nil {
       fmt.Println("ERR:", err)
+      fmt.Println("Error executing git commit -m 'update database'")
       exit(db, 1)
     }
     fmt.Println(stdout.String())
@@ -425,6 +426,7 @@ func main() {
     err = cmd.Run()
     if err != nil {
       fmt.Println("ERR:", err)
+      fmt.Println("Error executing git push")
       exit(db, 1)
     }
     fmt.Println(stdout.String())
