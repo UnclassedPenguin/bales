@@ -401,6 +401,7 @@ func main() {
     err := cmd.Run()
     if err != nil {
       fmt.Println("ERR:", err)
+      fmt.Println("Are you sure there is anything to git add?")
       exit(db, 1)
     }
     fmt.Println(stdout.String())
@@ -412,7 +413,6 @@ func main() {
     err = cmd.Run()
     if err != nil {
       fmt.Println("ERR:", err)
-      fmt.Println("Did you already execute git commit -m?")
       exit(db, 1)
     }
     fmt.Println(stdout.String())
