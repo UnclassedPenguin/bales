@@ -29,6 +29,7 @@ import (
   "regexp"
 )
 
+
 // Create database file if doesn't exist
 func createDatabase(db string) {
   _, err := os.Stat(db)
@@ -130,7 +131,6 @@ func s() {
 // Closes the database
 func exit(db *sql.DB, status int) {
   db.Close()
-  //s()
   fmt.Printf("bales: exit (%d)\n", status)
   os.Exit(status)
 }
@@ -170,8 +170,6 @@ const testDb = "test-database.db"
 // Main Function
 func main() {
 
-  var databaseToUse string
-
   // Flags
   var info bool
   var list bool
@@ -192,24 +190,26 @@ func main() {
   var date string
   var custom string
 
-  flag.BoolVar(&info, "i", false, "Prints some information you might need to remember.")
-  flag.BoolVar(&list, "l", false, "Prints the Database to terminal. Can add -g [group] to only list the records for a specific group.")
-  flag.BoolVar(&test, "t", false, "If set, uses the test database.")
-  flag.BoolVar(&add, "a", false, "Adds a record to the database. If set, requires -g (group) and -n (number of bales).")
-  flag.BoolVar(&del, "d", false, "Deletes a record from the database. If set, requires -n (id number of entry to delete).")
-  flag.BoolVar(&square, "s", false, "If set, indicates that the bale is square. Round is the default. This can be used when adding (-a) a record, or when listing (-l) to specify that you only want to see square bales.")
-  flag.BoolVar(&round, "r", false, "If set, indicates that the bale is round. Round is the default. This can be used when adding (-a) a record, or when listing (-l) to specify that you only want to see round bales.")
-  flag.BoolVar(&push, "push", false, "Pushes the databases with git.")
-  flag.BoolVar(&pull, "pull", false, "Pulls the databases with git.")
-  flag.BoolVar(&status, "status", false, "Checks the git status on project.")
-  flag.BoolVar(&version, "v", false, "Print the version number and exit.")
-  flag.BoolVar(&debug, "debug", false, "Execute function for debugging.")
-  flag.StringVar(&group, "g", "", "The name of the group to add to database.")
-  flag.StringVar(&year, "y", "", "Year to list from database.")
-  flag.StringVar(&month, "m", "", "Month to list from database. Can be a single month(10) or a range (10-12). Requires year (-y).")
-  flag.StringVar(&date, "date", "", "The date to put into the database, if not today. yyyy-mm-dd")
-  flag.StringVar(&custom, "c", "", "Custom SQL request. Requires -l. Example:\nbales -t -l -c \"SELECT * FROM bales WHERE strftime('%d', date) BETWEEN '01' AND '03'\"")
-  flag.IntVar(&number, "n", 0, "The number of bales to add/ or the id of the record to delete .")
+  flag.BoolVar(&info,     "i",      false, "Prints some information you might need to remember.")
+  flag.BoolVar(&list,     "l",      false, "Prints the Database to terminal. Can add -g [group] to only list the records for a specific group.")
+  flag.BoolVar(&test,     "t",      false, "If set, uses the test database.")
+  flag.BoolVar(&add,      "a",      false, "Adds a record to the database. If set, requires -g (group) and -n (number of bales).")
+  flag.BoolVar(&del,      "d",      false, "Deletes a record from the database. If set, requires -n (id number of entry to delete).")
+  flag.BoolVar(&square,   "s",      false, "If set, indicates that the bale is square. Round is the default. This can be used when adding (-a) a record, or when listing (-l) to specify that you only want to see square bales.")
+  flag.BoolVar(&round,    "r",      false, "If set, indicates that the bale is round. Round is the default. This can be used when adding (-a) a record, or when listing (-l) to specify that you only want to see round bales.")
+  flag.BoolVar(&push,     "push",   false, "Pushes the databases with git.")
+  flag.BoolVar(&pull,     "pull",   false, "Pulls the databases with git.")
+  flag.BoolVar(&status,   "status", false, "Checks the git status on project.")
+  flag.BoolVar(&version,  "v",      false, "Print the version number and exit.")
+  flag.BoolVar(&debug,    "debug",  false, "Execute function for debugging.")
+
+  flag.StringVar(&group,  "g",      "",    "The name of the group to add to database.")
+  flag.StringVar(&year,   "y",      "",    "Year to list from database.")
+  flag.StringVar(&month,  "m",      "",    "Month to list from database. Can be a single month(10) or a range (10-12). Requires year (-y).")
+  flag.StringVar(&date,   "date",   "",    "The date to put into the database, if not today. yyyy-mm-dd")
+  flag.StringVar(&custom, "c",      "",    "Custom SQL request. Requires -l. Example:\nbales -t -l -c \"SELECT * FROM bales WHERE strftime('%d', date) BETWEEN '01' AND '03'\"")
+
+  flag.IntVar(&number,    "n",       0,    "The number of bales to add/ or the id of the record to delete .")
 
   // This changes the help/usage info when -h is used.
   flag.Usage = func() {
@@ -219,18 +219,22 @@ func main() {
       //fmt.Fprintf(w, "...custom postamble ... \n")
   }
 
+  // Parse the flags :p
   flag.Parse()
 
   // Handles cmd line flag -i 
+  // Prints info and exits
   if info {
     printInfo()
   }
 
   // Handles cmd line flag -v 
+  // Prints version and exits
   if version {
     printVersion()
   }
 
+  // Variable to hold the date
   var timeStr string
 
   // Get either Current Date or a date entered as a command line option
@@ -242,14 +246,14 @@ func main() {
   }
 
   // Use regexp to check date to make sure it is a valid yyyy-mm-dd date
-  dateCheck, err := regexp.MatchString("\\d\\d\\d\\d-\\d\\d-\\d\\d", timeStr)
+  dateCheck, err := regexp.MatchString("^\\d{4}-\\d{2}-\\d{2}$", timeStr)
   if err != nil {
     fmt.Println("Error in dateCheck: ", err)
     os.Exit(1)
   }
 
-  // If Regexp check fails, print error and exit, prompting user to use a proper
-  // format for date
+  // If Regexp check fails, print error and exit,
+  // prompting user to use a proper format for date
   if !dateCheck {
     fmt.Println("Error:")
     fmt.Println("It seems your date isn't the proper format. Please enter date as YYYY-MM-DD ie 2022-01-12")
@@ -269,6 +273,9 @@ func main() {
 
   // I use this directory in the git section near the end
   directory := filepath.Join(home, "git/bales")
+
+  // Var that holds the current working database.
+  var databaseToUse string
 
   // Says whether to use the test database or the real database. 
   // Set with -t 
@@ -297,6 +304,7 @@ func main() {
   // How to query entire database
   // fetchRecords(db)
 
+  // Var to hold the type of bale.
   var typeOfBale string
 
   // Handles the command line way to add record
@@ -474,6 +482,7 @@ func main() {
     // exit
     exit(db, 0)
   }
+
 
   // This runs if no arguments are specified. Prints help usage.
   flag.Usage()
