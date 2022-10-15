@@ -249,7 +249,7 @@ func main() {
 
   if !dateCheck {
     fmt.Println("Error:")
-    fmt.Println("It seems your date isn't the proper format. Please enter date as YYYY-MM-DD")
+    fmt.Println("It seems your date isn't the proper format. Please enter date as YYYY-MM-DD ie 2022-01-12")
     os.Exit(1)
   }
 
