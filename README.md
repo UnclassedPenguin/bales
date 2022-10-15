@@ -1,5 +1,4 @@
 To-do:
-  - test
   - ~~Add check to date if entered to make sure it is actually a date and not some random string...Regex?~~
   - ~~Add ability to send custom sql command to list.~~
   - ~~Add flag to pull/push from git to update database~~
