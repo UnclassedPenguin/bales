@@ -401,7 +401,6 @@ func main() {
     err := cmd.Run()
     if err != nil {
       fmt.Println("ERR:", err)
-      fmt.Println("Did you already execute git add --all?")
       exit(db, 1)
     }
     fmt.Println(stdout.String())
