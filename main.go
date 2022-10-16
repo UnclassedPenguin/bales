@@ -141,15 +141,14 @@ func printInfo() {
   fmt.Println("UnclassedPenguin Bale Tracker")
   fmt.Println("")
   fmt.Println("Groups: sheep, bgoats, lgoats, horses, bulls, cows")
-  fmt.Println("Types of bales: square, round")
+  fmt.Println("Types of bales: square (-s), round (-r)(default)")
   fmt.Println("Sql Columns: id, Date, AnimalGroup, TypeOfBale, NumOfBales")
   os.Exit(0)
 }
 
 // Function to use for debugging or things
-func debugFunction(timeStr string) {
-  fmt.Printf("Date: ", timeStr)
-  fmt.Printf("DateType: %T", timeStr)
+func debugFunction() {
+  fmt.Println("Nothing here for now...")
   os.Exit(0)
 }
 
@@ -232,6 +231,10 @@ func main() {
   // Prints version and exits
   if version {
     printVersion()
+  }
+
+  if debug {
+    debugFunction()
   }
 
   // Variable to hold the date
