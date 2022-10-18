@@ -170,24 +170,24 @@ const testDb = "test-database.db"
 func main() {
 
   // Flags
-  var info bool
-  var list bool
-  var test bool
-  var add bool
-  var del bool
-  var push bool
-  var pull bool
-  var status bool
-  var square bool
-  var round bool
+  var info    bool
+  var list    bool
+  var test    bool
+  var add     bool
+  var del     bool
+  var push    bool
+  var pull    bool
+  var status  bool
+  var square  bool
+  var round   bool
   var version bool
-  var debug bool
-  var number int
-  var group string
-  var year string
-  var month string
-  var date string
-  var custom string
+  var debug   bool
+  var number  int
+  var group   string
+  var year    string
+  var month   string
+  var date    string
+  var custom  string
 
   flag.BoolVar(&info,     "i",      false, "Prints some information you might need to remember.")
   flag.BoolVar(&list,     "l",      false, "Prints the Database to terminal. Can add -g [group] to only list the records for a specific group.")
