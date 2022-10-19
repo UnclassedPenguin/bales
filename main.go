@@ -269,13 +269,13 @@ func main() {
   // Keeps the database in the project directory
   // I might change this to a variable from a config file. Thoughts?
   home, _ := os.UserHomeDir()
-  err = os.Chdir(filepath.Join(home, "git/bales/"))
+  err = os.Chdir(filepath.Join(home, ".go/src/github.com/unclassedpenguin/bales"))
   if err != nil {
       panic(err)
   }
 
   // I use this directory in the git section near the end
-  directory := filepath.Join(home, "git/bales")
+  directory := filepath.Join(home, ".go/src/github.com/unclassedpenguin/bales")
 
   // Var that holds the current working database.
   var databaseToUse string
