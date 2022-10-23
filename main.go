@@ -142,6 +142,7 @@ func printInfo() {
   fmt.Println("")
   fmt.Println("Groups: sheep, bgoats, lgoats, horses, bulls, cows")
   fmt.Println("Types of bales: square (-s), round (-r)(default)")
+  fmt.Println("Sql Table: bales")
   fmt.Println("Sql Columns: id, Date, AnimalGroup, TypeOfBale, NumOfBales")
   os.Exit(0)
 }
@@ -323,8 +324,8 @@ func main() {
       typeOfBale = "round"
     }
 
-    fmt.Println("        Date: ", timeStr)
-    fmt.Println("       Group: ", group)
+    fmt.Println("Date        : ", timeStr)
+    fmt.Println("Group       : ", group)
     fmt.Println("Type of Bale: ", typeOfBale)
     fmt.Println("Num of Bales: ", number)
     s()
