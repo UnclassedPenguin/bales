@@ -144,6 +144,8 @@ func printInfo() {
   fmt.Println("Types of bales: square (-s), round (-r)(default)")
   fmt.Println("Sql Table: bales")
   fmt.Println("Sql Columns: id, Date, AnimalGroup, TypeOfBale, NumOfBales")
+  fmt.Println("Sql Dates: can use strftime('%Y', date) for year. can use '%m' for month")
+  fmt.Println("           and '%d' for day.")
   os.Exit(0)
 }
 
