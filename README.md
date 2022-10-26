@@ -1,5 +1,6 @@
 To-do:
-  - add -date to list function, so you can see on a specific day what you used...After the work I did to rewrite the list function, it should be fairly easy to add more feautures like this.
+  - add datefrom function. maybe -from. So you can list only from a specific date.
+  - ~~add -date to list function, so you can see on a specific day what you used...After the work I did to rewrite the list function, it should be fairly easy to add more feautures like this.~~
   - ~~Rewrite the list function. Make it so that you can add things together. if you say group, it tags onto the select * from bales statemetn "where animalgroup=" and then if you ad more it says "and so and so"...It should work.~~
   - Add an ability to get average. for square/round. maybe by group as well. for daily weekly monthly?
   - ~~Add check to date if entered to make sure it is actually a date and not some random string...Regex?~~
