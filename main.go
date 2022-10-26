@@ -351,63 +351,105 @@ func main() {
     exit(db, 1)
   }
 
-  // Handles the command line way to list records
+  // Handles command line way to list records. 
+  // It checks all the flags, and if they have been used, it adds them to "recordStrings". 
+  // At the end, it takes all of those strings and creates a database query and then
+  // sends that query to the fetchRecord function. 
   if list {
-    if group != "" && !round && !square {
-      fmt.Println("Date: ", timeStr)
-      record, err := db.Query("SELECT * FROM bales WHERE AnimalGroup = ?", group)
-      fetchRecord(db, record, err)
-      exit(db, 0)
-    } else if custom != "" {
+    if custom != "" {
       fmt.Println("Date: ", timeStr)
       record, err := db.Query(custom)
       fetchRecord(db, record, err)
       exit(db, 0)
-    } else if round && !square && group == "" {
-      fmt.Println("Date: ", timeStr)
-      record, err := db.Query("SELECT * FROM bales WHERE TypeOfBale = 'round'")
-      fetchRecord(db, record, err)
-      exit(db, 0)
-    } else if square && !round && group == "" {
-      fmt.Println("Date: ", timeStr)
-      record, err := db.Query("SELECT * FROM bales WHERE TypeOfBale = 'square'")
-      fetchRecord(db, record, err)
-      exit(db, 0)
-    } else if !square && !round && group == "" && year == "" && month == "" {
-      fmt.Println("Date: ", timeStr)
-      record, err := db.Query("SELECT * FROM bales")
-      fetchRecord(db, record, err)
-      exit(db, 0)
-    } else if year != "" && month == "" {
-      fmt.Println("Date: ", timeStr)
-      record, err := db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ?", year)
-      fetchRecord(db, record, err)
-      exit(db, 0)
-    } else if year != "" && month != "" {
-      fmt.Println("Date: ", timeStr)
+    }
 
-      var record *sql.Rows
-      var err error
-      contains := strings.Contains(month, "-")
+    // recordStrings collects the sql phrases for each different flag. 
+    var recordStrings []string
 
-      if contains {
-        months := strings.Split(month, "-")
-        month1 := months[0]
-        month2 := months[1]
+    // This is the beginning of all queries to the database. I always want every column 
+    // returned. So if no options are set, this is sent to fetchRecords all by itself.
+    // Otherwise, everything else is added onto this string.
+    baseString := "SELECT * FROM bales"
 
-        record, err = db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ? and (strftime('%m', date) between ? and ?)", year, month1, month2)
-      } else {
-         record, err = db.Query("SELECT * FROM bales WHERE strftime('%Y', date) = ? and strftime('%m', date) = ?", year, month)
-      }
+    if group != "" {
+      groupString := fmt.Sprint("Animalgroup='" + group + "'")
+      recordStrings = append(recordStrings, groupString)
+    }
 
-      fetchRecord(db, record, err)
-      exit(db, 0)
-    } else {
-      fmt.Println("You may have used the options wrong. If using -l you can specify group, or baletype. So only one option of -g animal, -s, or -r")
+    if round && !square {
+      baleString := fmt.Sprint("TypeOfBale='round'")
+      recordStrings = append(recordStrings, baleString)
+    } else if square && !round {
+      baleString := fmt.Sprint("TypeOfBale='square'")
+      recordStrings = append(recordStrings, baleString)
+    } else if round && square {
+      fmt.Println("Can't use -s and -r together. How can a bale be square and round?")
       exit(db, 1)
     }
-  }
 
+    if year != "" {
+      contains := strings.Contains(year, "-")
+
+      // This handles if you have a range of years. must be written as i.e. 2010-2015
+      if contains {
+        years := strings.Split(year, "-")
+        yearString := "(strftime('%Y', date) between '" + string(years[0]) + "' and '" + string(years[1]) + "')"
+        recordStrings = append(recordStrings, yearString)
+      // This handles single year 
+      } else {
+        yearString := fmt.Sprint("strftime('%Y', date)='" + year + "'")
+        recordStrings = append(recordStrings, yearString)
+      }
+    }
+
+    if month != "" {
+      contains := strings.Contains(month, "-")
+
+      // This handles if you have a range of months. must be written as i.e. 05-10
+      if contains {
+        months := strings.Split(month, "-")
+        monthString := "(strftime('%m', date) between '" + string(months[0]) + "' and '" + string(months[1]) + "')"
+        recordStrings = append(recordStrings, monthString)
+      // This handles single month
+      } else {
+        monthString := fmt.Sprint("strftime('%m', date)='" + month + "'")
+        recordStrings = append(recordStrings, monthString)
+      }
+    }
+
+    // This is the area that puts the sql phrase together and sends it to the fetchRecords
+    // function.
+    // I set it up to pay attention to three scenarios: No additional phrase, 1 additional
+    // phrase, or more than one additional phrase.
+    // The phrases are stored in the slice recordStrings
+    // If no additional phrases were set, ie no flags were used, sends only the baseString,
+    // and returns the entire database. 
+    // If there is one additional phrase, it appends WHERE and the phrase to base string,
+    // and if there are more than one phrase to add, first it combines them with AND, and 
+    // then adds that to baseString, with the connecting WHERE as well.
+    if len(recordStrings) == 0 {
+      fmt.Println("Date: ", timeStr)
+      fmt.Println("SQL Query:", baseString)
+      record, err := db.Query(baseString)
+      fetchRecord(db, record, err)
+      exit(db, 0)
+    } else if len(recordStrings) == 1 {
+      fmt.Println("Date: ", timeStr)
+      fullString := fmt.Sprint(baseString + " WHERE " + recordStrings[0])
+      fmt.Println("SQL Query:", fullString)
+      record, err := db.Query(fullString)
+      fetchRecord(db, record, err)
+      exit(db, 0)
+    } else if len(recordStrings) > 1 {
+      fmt.Println("Date: ", timeStr)
+      combineStrings := strings.Join(recordStrings, " AND ")
+      fullString := fmt.Sprint(baseString + " WHERE " + combineStrings)
+      fmt.Println("SQL Query:", fullString)
+      record, err := db.Query(fullString)
+      fetchRecord(db, record, err)
+      exit(db, 0)
+    }
+  }
 
   // Handles the github push command.
   if push {
