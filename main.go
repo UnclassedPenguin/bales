@@ -206,8 +206,8 @@ func main() {
   flag.BoolVar(&debug,    "debug",  false, "Execute function for debugging.")
 
   flag.StringVar(&group,  "g",      "",    "The name of the group to add to database.")
-  flag.StringVar(&year,   "y",      "",    "Year to list from database.")
-  flag.StringVar(&month,  "m",      "",    "Month to list from database. Can be a single month(09) or a range (09-12). Requires year (-y). Single digit months require a leading 0.")
+  flag.StringVar(&year,   "y",      "",    "Year to list from database. Can be a single year(ie 2019) or a range (ie 2019-2022)")
+  flag.StringVar(&month,  "m",      "",    "Month to list from database. Can be a single month(ie 09) or a range (ie 09-12). Single digit months require a leading 0.")
   flag.StringVar(&date,   "date",   "",    "The date to put into the database, if not today. yyyy-mm-dd")
   flag.StringVar(&custom, "c",      "",    "Custom SQL request. Requires -l. Example:\nbales -t -l -c \"SELECT * FROM bales WHERE strftime('%d', date) BETWEEN '01' AND '03'\"")
 
@@ -216,7 +216,7 @@ func main() {
   // This changes the help/usage info when -h is used.
   flag.Usage = func() {
       w := flag.CommandLine.Output() // may be os.Stderr - but not necessarily
-      fmt.Fprintf(w, "Description of %s:\n\nThis is a program to use to keep track of bales that have been fed.\nIts useful to have the data to see how many bales you go through for the winter.\n\nUsage:\n\nbales [-t] [-l [-g group | -s | -r]] [-a -g group [-s | -r] -n num] [-d -n num]\n\nAvailable arguments:\n", os.Args[0])
+      fmt.Fprintf(w, "Description of %s:\n\nThis is a program to use to keep track of bales that have been fed.\nIts useful to have the data to see how many bales you go through for the winter.\n\nUsage:\n\nbales [-t] [-l [-g group] [-s] [-r] [-y year] [-m month]] [-a [-date YYYY-MM-DD] -g group [-s | -r] -n num] [-d -n num]\n\nAvailable arguments:\n", os.Args[0])
       flag.PrintDefaults()
       //fmt.Fprintf(w, "...custom postamble ... \n")
   }
