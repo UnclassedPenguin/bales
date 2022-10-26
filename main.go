@@ -251,6 +251,7 @@ func main() {
     timeStr = date
   }
 
+
   // Use regexp to check date to make sure it is a valid yyyy-mm-dd date
   dateCheck, err := regexp.MatchString("^\\d{4}-\\d{2}-\\d{2}$", timeStr)
   if err != nil {
@@ -375,6 +376,11 @@ func main() {
     if group != "" {
       groupString := fmt.Sprint("Animalgroup='" + group + "'")
       recordStrings = append(recordStrings, groupString)
+    }
+
+    if date != "" {
+      dateString := fmt.Sprint("date='"+date+"'")
+      recordStrings = append(recordStrings, dateString)
     }
 
     // round is -r flag and square is -s flag
