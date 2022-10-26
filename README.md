@@ -1,15 +1,16 @@
 To-do:
-  - add datefrom function. maybe -from. So you can list only from a specific date.
-  - ~~add -date to list function, so you can see on a specific day what you used...After the work I did to rewrite the list function, it should be fairly easy to add more feautures like this.~~
-  - ~~Rewrite the list function. Make it so that you can add things together. if you say group, it tags onto the select * from bales statemetn "where animalgroup=" and then if you ad more it says "and so and so"...It should work.~~
-  - Add an ability to get average. for square/round. maybe by group as well. for daily weekly monthly?
+  - I'd like to add a config file and store the database somewhere separate(referenced by the config file), and then put it on github maybe? Although then the database would be specific to a computer and you would have to worry about backing it up/sharing it on your own...Something to think about. 
+  - add datefrom function. Maybe -from. So you can list only from a specific date.
+  - ~~add -date to list function, so you can see on a specific day what you used...After the work I did to rewrite the list function, it should be fairly easy to add more features like this.~~
+  - ~~Rewrite the list function. Make it so that you can add things together. If you say group, it tags onto the select * from bales statement "where animalgroup=" and then if you ad more it says "and so and so"...It should work.~~
+  - Add an ability to get average. For square/round. Maybe by group as well. For daily weekly monthly?
   - ~~Add check to date if entered to make sure it is actually a date and not some random string...Regex?~~
   - ~~Add ability to send custom sql command to list.~~
   - ~~Add flag to pull/push from git to update database~~
     - Finally got this figured out...
-  - ~~Add ability to get entries from date range. Maybe separate by year/month. Individual or range. have to be year and month....~~
+  - ~~Add ability to get entries from date range. Maybe separate by year/month. Individual or range. Have to be year and month....~~
     - This is implemented somewhat, although probably done poorly. Not sure how to organize it...it works, but I'm sure there are lots of weird errors if you don't enter it how it expects. 
-  - ~~Look into flag to see if you can add a description for -h. add more info to help~~
+  - ~~Look into flag to see if you can add a description for -h. Add more info to help~~
   - ~~Add ability to list only a specific group. i.e. bales -l -g bulls would query everything for just bulls~~
   - ~~Add ability to get a total count for all | square/round | specific group.~~
   - ~~Add ability to get total count for square or round bales~~
