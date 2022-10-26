@@ -99,6 +99,10 @@ func fetchRecord(db *sql.DB, record *sql.Rows, err error) {
   t.SetOutputMirror(os.Stdout)
 
   t.AppendHeader(table.Row{"id", "Date", "Group", "TypeOfBale", "NumOfBale"})
+
+  // I don't remember why I declared the variables in the for loop?
+  // Is this needed? It would probably be more efficient to declare them
+  // outside the loop, if possible. Look into it, and see if they can be moved.
   for record.Next() {
     var id int
     var Date string
@@ -453,7 +457,7 @@ func main() {
     // phrase, or more than one additional phrase.
     // The phrases are stored in the slice recordStrings
     // If no additional phrases were set, ie no flags were used, sends only the baseString,
-    // and returns the entire database. 
+    // which returns the entire database.
     // If there is one additional phrase, it appends WHERE and the phrase to base string,
     // and if there are more than one phrase to add, first it combines them with AND, and 
     // then adds that to baseString, with the connecting WHERE as well.
