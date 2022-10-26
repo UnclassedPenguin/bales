@@ -1,4 +1,5 @@
 To-do:
+  - Add ability for "or" to group. So command line would be "-g "cows or sheep", but it would split it to sql: "animalgroup='cows' OR animalgroup='sheep'"
   - I'd like to add a config file and store the database somewhere separate(referenced by the config file), and then put it on github maybe? Although then the database would be specific to a computer and you would have to worry about backing it up/sharing it on your own...Something to think about. 
   - add datefrom function. Maybe -from. So you can list only from a specific date.
   - ~~add -date to list function, so you can see on a specific day what you used...After the work I did to rewrite the list function, it should be fairly easy to add more features like this.~~
