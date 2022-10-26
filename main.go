@@ -393,10 +393,20 @@ func main() {
       // This handles if you have a range of years. must be written as i.e. 2010-2015
       if contains {
         years := strings.Split(year, "-")
+        // Lets the user know that the year must be 4 digits, instead of just returning an empty database.
+        if len(years[0]) != 4 || len(years[1]) != 4 {
+          fmt.Println("Your year appears to be entered wrong. Make sure year contains exactly 4 digits. ie 2022")
+          exit(db, 1)
+        }
         yearString := "(strftime('%Y', date) between '" + string(years[0]) + "' and '" + string(years[1]) + "')"
         recordStrings = append(recordStrings, yearString)
       // This handles single year 
       } else {
+        // Lets the user know that the year must be 4 digits, instead of just returning an empty database.
+        if len(year) != 4 {
+          fmt.Println("Your year appears to be entered wrong. Make sure year contains exactly 4 digits. ie 2022")
+          exit(db, 1)
+        }
         yearString := fmt.Sprint("strftime('%Y', date)='" + year + "'")
         recordStrings = append(recordStrings, yearString)
       }
@@ -408,10 +418,20 @@ func main() {
       // This handles if you have a range of months. must be written as i.e. 05-10
       if contains {
         months := strings.Split(month, "-")
+        // Lets the user know that the month requires a leading 0, instead of just returning an empty database.
+        if len(months[0]) != 2 || len(months[1]) != 2 {
+          fmt.Println("Your month appears to be wrong. Make sure each month is exactly 2 digits. If its a single digit month, add a leading zero, ie 05.")
+          exit(db, 1)
+        }
         monthString := "(strftime('%m', date) between '" + string(months[0]) + "' and '" + string(months[1]) + "')"
         recordStrings = append(recordStrings, monthString)
       // This handles single month
       } else {
+        // Lets the user know that the month requires a leading 0, instead of just returning an empty database.
+        if len(month) != 2 {
+          fmt.Println("Your month appears to be wrong. Make sure each month is exactly 2 digits. If its a single digit month, add a leading zero, ie 05.")
+          exit(db, 1)
+        }
         monthString := fmt.Sprint("strftime('%m', date)='" + month + "'")
         recordStrings = append(recordStrings, monthString)
       }
