@@ -371,11 +371,13 @@ func main() {
     // Otherwise, everything else is added onto this string.
     baseString := "SELECT * FROM bales"
 
+    // Group is -g flag
     if group != "" {
       groupString := fmt.Sprint("Animalgroup='" + group + "'")
       recordStrings = append(recordStrings, groupString)
     }
 
+    // round is -r flag and square is -s flag
     if round && !square {
       baleString := fmt.Sprint("TypeOfBale='round'")
       recordStrings = append(recordStrings, baleString)
@@ -387,6 +389,7 @@ func main() {
       exit(db, 1)
     }
 
+    // year is -y flag
     if year != "" {
       contains := strings.Contains(year, "-")
 
@@ -412,6 +415,7 @@ func main() {
       }
     }
 
+    // month is -m flag
     if month != "" {
       contains := strings.Contains(month, "-")
 
