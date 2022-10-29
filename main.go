@@ -597,5 +597,5 @@ func main() {
   }
 
   // This runs if no arguments are specified.
-  fmt.Println("Try running with -h for usage")
+  fmt.Println("No options specified. Try running with -h for usage")
 }
