@@ -267,7 +267,6 @@ func main() {
     timeStr = date
   }
 
-
   // Use regexp to check date to make sure it is a valid yyyy-mm-dd date
   dateCheck, err := regexp.MatchString("^\\d{4}-\\d{2}-\\d{2}$", timeStr)
   if err != nil {
@@ -282,7 +281,6 @@ func main() {
     fmt.Println("It seems your date isn't the proper format. Please enter date as YYYY-MM-DD ie 2022-01-12")
     os.Exit(1)
   }
-
 
   // Read Config file and setup databases
   home, _ := os.UserHomeDir()
@@ -487,15 +485,13 @@ func main() {
     // The phrases are stored in the slice recordStrings
     // If no additional phrases were set, ie no flags were used, sends only the baseString,
     // which returns the entire database.
-    // If there is one additional phrase, it appends WHERE and the phrase to base string,
-    // and if there are more than one phrase to add, first it combines them with AND, and 
-    // then adds that to baseString, with the connecting WHERE as well.
     if len(recordStrings) == 0 {
       fmt.Println("Date: ", timeStr)
       fmt.Println("SQL Query:", baseString)
       record, err := db.Query(baseString)
       fetchRecord(db, record, err)
       exit(db, 0)
+    // If there is one additional phrase, it appends WHERE and the phrase to base string,
     } else if len(recordStrings) == 1 {
       fmt.Println("Date: ", timeStr)
       fullString := fmt.Sprint(baseString + " WHERE " + recordStrings[0])
@@ -503,6 +499,8 @@ func main() {
       record, err := db.Query(fullString)
       fetchRecord(db, record, err)
       exit(db, 0)
+    // If there are more than one phrase to add, first it combines them with AND, and 
+    // then adds that to baseString, with the connecting WHERE as well.
     } else if len(recordStrings) > 1 {
       fmt.Println("Date: ", timeStr)
       combineStrings := strings.Join(recordStrings, " AND ")
@@ -522,8 +520,7 @@ func main() {
     cmd.Stdout = stdout
     err := cmd.Run()
     if err != nil {
-      fmt.Println("ERR:", err)
-      fmt.Println("Error executing git add --all")
+      fmt.Println("Error executing git add --all:\n", err)
       exit(db, 1)
     }
     fmt.Println(stdout.String())
@@ -534,8 +531,7 @@ func main() {
     cmd.Stdout = stdout
     err = cmd.Run()
     if err != nil {
-      fmt.Println("ERR:", err)
-      fmt.Println("Error executing git commit -m 'update bales database'")
+      fmt.Println("Error executing git commit -m 'update bales database':\n", err)
       exit(db, 1)
     }
     fmt.Println(stdout.String())
@@ -547,8 +543,7 @@ func main() {
     cmd.Stderr = stderr
     err = cmd.Run()
     if err != nil {
-      fmt.Println("ERR:", err)
-      fmt.Println("Error executing git push")
+      fmt.Println("Error executing git push:\n", err)
       exit(db, 1)
     }
     fmt.Println(stdout.String())
@@ -568,7 +563,7 @@ func main() {
     cmd.Stdout = stdout
     err := cmd.Run()
     if err != nil {
-      fmt.Println("ERR:", err)
+      fmt.Println("Error executing git pull:\n", err)
       exit(db, 1)
     }
     fmt.Println(stdout.String())
@@ -585,7 +580,7 @@ func main() {
     cmd.Stdout = stdout
     err := cmd.Run()
     if err != nil {
-      fmt.Println("ERR:", err)
+      fmt.Println("Error executing git status:\n", err)
       exit(db, 1)
     }
     fmt.Println(stdout.String())
@@ -593,7 +588,6 @@ func main() {
     // exit
     exit(db, 0)
   }
-
 
   // This runs if no arguments are specified. Prints help usage.
   flag.Usage()
