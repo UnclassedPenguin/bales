@@ -596,6 +596,6 @@ func main() {
     exit(db, 0)
   }
 
-  // This runs if no arguments are specified. Prints help usage.
-  flag.Usage()
+  // This runs if no arguments are specified.
+  fmt.Println("Try running with -h for usage")
 }
