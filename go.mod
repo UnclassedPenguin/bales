@@ -1,4 +1,4 @@
-module bales
+module github.com/unclassedpenguin/bales
 
 go 1.19
 
