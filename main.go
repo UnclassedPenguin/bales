@@ -289,6 +289,7 @@ func main() {
   configFile, err := ioutil.ReadFile(filepath.Join(home, ".config/bales/config.yaml"))
   if err != nil {
     fmt.Println("Error reading config file:\n", err)
+    os.Exit(1)
   }
 
   var configData Configuration
