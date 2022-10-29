@@ -87,7 +87,7 @@ func deleteRecord(db *sql.DB, id int) {
 }
 
 // Fetches a record from database
-// Uses go-pretty tables to print it out pretty.
+// Uses github.com/jedib0t/go-pretty/v6/table tables to print it out pretty.
 func fetchRecord(db *sql.DB, record *sql.Rows, err error) {
   if err != nil {
     log.Fatal(err)
