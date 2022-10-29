@@ -1,4 +1,11 @@
-To-do:
+# Bales
+#### A program for keeping track of bales that you have fed
+
+## Current Status
+
+Not currently really ready for others to use. If you really wanted to, you can git clone this repository, edit the config.yaml and then `go build main.go`. If it were me, I'd `go build -o bales main.go` then you can put bales in your path somewhere. bales -h will give you help usage.
+
+## To-do:
   - Restructure code so its not all stuck in main
   - make default list only list the current month. add -all flag to show entire database
   - Add ability for "or" to group. So command line would be "-g "cows or sheep"", but it would split it to sql: "animalgroup='cows' OR animalgroup='sheep'"
