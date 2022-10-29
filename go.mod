@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/jedib0t/go-pretty/v6 v6.4.0
 	github.com/mattn/go-sqlite3 v1.14.15
+	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (

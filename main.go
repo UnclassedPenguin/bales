@@ -24,9 +24,10 @@ import (
   "log"
   "time"
   "flag"
-  "path/filepath"
   "strings"
   "regexp"
+  "io/ioutil"
+  "gopkg.in/yaml.v2"
 )
 
 
@@ -35,7 +36,7 @@ func createDatabase(db string) {
   _, err := os.Stat(db)
   if os.IsNotExist(err) {
     fmt.Println("Database doesn't exist. Creating...")
-    file, err := os.Create("database.db")
+    file, err := os.Create(db)
     if err != nil {
         log.Fatal(err)
     }
@@ -166,11 +167,21 @@ func printVersion() {
   os.Exit(0)
 }
 
+// Struct for configuration.
+type Configuration struct {
+  DatabaseDir  string`yaml:"DatabaseDir"`
+  RealDatabase string`yaml:"RealDatabase"`
+  TestDatabase string`yaml:"TestDatabase"`
+}
 
 // Global variable for databases. One for real, and one to test 
 // things with, that has garbage data in it.
-const realDb = "database.db"
-const testDb = "test-database.db"
+//const realDb = "database.db"
+//const testDb = "test-database.db"
+var (
+  realDb string
+  testDb string
+)
 
 
 // Main Function
@@ -271,19 +282,34 @@ func main() {
     os.Exit(1)
   }
 
-  // Change dir to project directory
-  // This is needed so a database isn't created where you execute from 
-  // (I have the executable soft linked to to a command in ~/.bin)
-  // Keeps the database in the project directory
-  // I might change this to a variable from a config file. Thoughts?
-  home, _ := os.UserHomeDir()
-  err = os.Chdir(filepath.Join(home, ".go/src/github.com/unclassedpenguin/bales"))
+
+  // Read Config file and setup databases
+  configFile, err := ioutil.ReadFile("./config.yaml")
   if err != nil {
-      panic(err)
+    fmt.Println("Error reading config file:\n", err)
+  }
+
+  var configData Configuration
+  err = yaml.Unmarshal(configFile, &configData)
+  if err != nil {
+    fmt.Println("Error Unmarshal-ling yaml config file:\n", err)
   }
 
   // I use this directory in the git section near the end
-  directory := filepath.Join(home, ".go/src/github.com/unclassedpenguin/bales")
+  dbDir := configData.DatabaseDir
+
+  // This sets the database based on the config file
+  realDb = configData.RealDatabase
+  testDb = configData.TestDatabase
+
+  // Change dir to database directory
+  // This is needed so a database isn't created where you execute from 
+  // (I have the executable soft linked to to a command in ~/.bin)
+  // Keeps the database in the database directory
+  err = os.Chdir(dbDir)
+  if err != nil {
+    fmt.Println("Error changing to directory:\n", err)
+  }
 
   // Var that holds the current working database.
   var databaseToUse string
@@ -489,7 +515,7 @@ func main() {
   if push {
     // git add --all
     cmd, stdout := exec.Command("git", "add", "--all"), new(strings.Builder)
-    cmd.Dir = directory
+    cmd.Dir = dbDir
     cmd.Stdout = stdout
     err := cmd.Run()
     if err != nil {
@@ -501,7 +527,7 @@ func main() {
 
     // git commit -m 'update database'
     cmd, stdout = exec.Command("git", "commit", "-m", "'update database'"), new(strings.Builder)
-    cmd.Dir = directory
+    cmd.Dir = dbDir 
     cmd.Stdout = stdout
     err = cmd.Run()
     if err != nil {
@@ -513,7 +539,7 @@ func main() {
 
     // git push
     cmd, stdout, stderr := exec.Command("git", "push"), new(strings.Builder), new(strings.Builder)
-    cmd.Dir = directory
+    cmd.Dir = dbDir
     cmd.Stdout = stdout
     cmd.Stderr = stderr
     err = cmd.Run()
@@ -535,7 +561,7 @@ func main() {
   if pull {
     // git pull 
     cmd, stdout := exec.Command("git", "pull"), new(strings.Builder)
-    cmd.Dir = directory
+    cmd.Dir = dbDir
     cmd.Stdout = stdout
     err := cmd.Run()
     if err != nil {
@@ -552,7 +578,7 @@ func main() {
   if status {
     // git status 
     cmd, stdout := exec.Command("git", "status"), new(strings.Builder)
-    cmd.Dir = directory
+    cmd.Dir = dbDir
     cmd.Stdout = stdout
     err := cmd.Run()
     if err != nil {

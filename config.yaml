@@ -1,0 +1,8 @@
+# Database dir is the directory you want to store your databases in.
+DatabaseDir: /home/tyler/git/databases
+
+# RealDatabase is the legit database
+RealDatabase: balesDatabase.db
+
+# TestDatabase is a database you can use to test features
+TestDatabase: balesTestDatabase.db
