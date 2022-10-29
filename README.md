@@ -3,7 +3,7 @@
 
 ## Current Status
 
-Not currently really ready for others to use. If you really wanted to, you can git clone this repository, creat the  config.yaml at ~/.config/bales/config.yaml and then `go build main.go`. If it were me, I'd `go build -o bales main.go` then you can put bales in your path somewhere. bales -h will give you help usage.
+Not currently really ready for others to use. If you really wanted to, you can git clone this repository, create the  config.yaml at ~/.config/bales/config.yaml and then `go build main.go`. If it were me, I'd `go build -o bales main.go` then you can put bales in your path somewhere. bales -h will give you help usage.
 
 ### Example ~/.config/bales/config.yaml
 
