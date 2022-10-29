@@ -1,9 +1,10 @@
 To-do:
+  - Restructure code so its not all stuck in main
   - make default list only list the current month. add -all flag to show entire database
   - Add ability for "or" to group. So command line would be "-g "cows or sheep"", but it would split it to sql: "animalgroup='cows' OR animalgroup='sheep'"
-  - I'd like to add a config file and store the database somewhere separate(referenced by the config file), and then put it on github maybe? Although then the database would be specific to a computer and you would have to worry about backing it up/sharing it on your own...Something to think about. 
-    - I think this would work. Make a separate folder for the database(also a git folder), and make that the folder that bales -push and -pull works on. So it still updates the database, can still sync the database between computers, and not share the private data...
   - add datefrom function. Maybe -from. So you can list only from a specific date.
+  - ~~I'd like to add a config file and store the database somewhere separate(referenced by the config file), and then put it on github maybe? Although then the database would be specific to a computer and you would have to worry about backing it up/sharing it on your own...Something to think about.~~
+    - I think this would work. Make a separate folder for the database(also a git folder), and make that the folder that bales -push and -pull works on. So it still updates the database, can still sync the database between computers, and not share the private data...
   - ~~add -date to list function, so you can see on a specific day what you used...After the work I did to rewrite the list function, it should be fairly easy to add more features like this.~~
   - ~~Rewrite the list function. Make it so that you can add things together. If you say group, it tags onto the select * from bales statement "where animalgroup=" and then if you ad more it says "and so and so"...It should work.~~
   - Add an ability to get average. For square/round. Maybe by group as well. For daily weekly monthly?
