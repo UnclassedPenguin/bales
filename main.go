@@ -525,14 +525,14 @@ func main() {
     }
     fmt.Println(stdout.String())
 
-    // git commit -m 'update database'
-    cmd, stdout = exec.Command("git", "commit", "-m", "'update database'"), new(strings.Builder)
-    cmd.Dir = dbDir 
+    // git commit -m 'update bales database'
+    cmd, stdout = exec.Command("git", "commit", "-m", "'update bales database'"), new(strings.Builder)
+    cmd.Dir = dbDir
     cmd.Stdout = stdout
     err = cmd.Run()
     if err != nil {
       fmt.Println("ERR:", err)
-      fmt.Println("Error executing git commit -m 'update database'")
+      fmt.Println("Error executing git commit -m 'update bales database'")
       exit(db, 1)
     }
     fmt.Println(stdout.String())
