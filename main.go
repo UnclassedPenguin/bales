@@ -316,6 +316,7 @@ func main() {
   err = os.Chdir(dbDir)
   if err != nil {
     fmt.Println("Error changing to directory:\n", err)
+    os.Exit(1)
   }
 
   // Var that holds the current working database.
