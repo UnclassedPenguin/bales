@@ -232,7 +232,13 @@ func main() {
   // This changes the help/usage info when -h is used.
   flag.Usage = func() {
       w := flag.CommandLine.Output() // may be os.Stderr - but not necessarily
-      fmt.Fprintf(w, "Description of %s:\n\nThis is a program to use to keep track of bales that have been fed.\nIts useful to have the data to see how many bales you go through for the winter.\n\nUsage:\n\nbales [-t] [-l [-g group] [-s | -r] [-y year] [-m month]] [-a [-date YYYY-MM-DD] -g group [-s | -r] -n num] [-d -n num]\n\nAvailable arguments:\n", os.Args[0])
+      description := "Description of %s:\n\n" +
+       "This is a program to use to keep track of bales that have been fed.\n" +
+       "It's useful to have the data to see how many bales you go through for the winter.\n\n" +
+       "Usage:\n\nbales [-t] [-l [-g group] [-s | -r] [-y year] [-m month]] " +
+       "[-a [-date YYYY-MM-DD] -g group [-s | -r] -n num] [-d -n num]\n\n" +
+       "Available arguments:\n"
+      fmt.Fprintf(w, description, os.Args[0])
       flag.PrintDefaults()
       //fmt.Fprintf(w, "...custom postamble ... \n")
   }
