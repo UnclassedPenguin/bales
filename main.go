@@ -209,7 +209,7 @@ func main() {
   var custom  string
 
   flag.BoolVar(&info,     "i",      false, "Prints some information you might need to remember.")
-  flag.BoolVar(&list,     "l",      false, "Prints the Database to terminal. Can add -g [group] to only list the records for a specific group.")
+  flag.BoolVar(&list,     "l",      false, "Prints the Database to terminal. Optionally you can use -g, -s, -r, -y, -m, -date...")
   flag.BoolVar(&test,     "t",      false, "If set, uses the test database.")
   flag.BoolVar(&add,      "a",      false, "Adds a record to the database. If set, requires -g (group) and -n (number of bales).")
   flag.BoolVar(&del,      "d",      false, "Deletes a record from the database. If set, requires -n (id number of entry to delete).")
