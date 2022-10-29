@@ -3,9 +3,26 @@
 
 ## Current Status
 
-Not currently really ready for others to use. If you really wanted to, you can git clone this repository, edit the config.yaml and then `go build main.go`. If it were me, I'd `go build -o bales main.go` then you can put bales in your path somewhere. bales -h will give you help usage.
+Not currently really ready for others to use. If you really wanted to, you can git clone this repository, creat the  config.yaml at ~/.config/bales/config.yaml and then `go build main.go`. If it were me, I'd `go build -o bales main.go` then you can put bales in your path somewhere. bales -h will give you help usage.
+
+### Example ~/.config/bales/config.yaml
+
+```yaml
+# Database dir is the directory you want to store your databases in.
+# It can be a git repo, but doesn't have to be...
+DatabaseDir: /home/username/git/databases
+
+# RealDatabase is the legit database
+RealDatabase: balesDatabase.db
+
+# TestDatabase is a database you can use to test features
+TestDatabase: balesTestDatabase.db
+
+```
+
 
 ## To-do:
+  - Add check for config file, if not, prompt user to make the config file at ~/.config/bales
   - Restructure code so its not all stuck in main
   - make default list only list the current month. add -all flag to show entire database
   - Add ability for "or" to group. So command line would be "-g "cows or sheep"", but it would split it to sql: "animalgroup='cows' OR animalgroup='sheep'"

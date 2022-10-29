@@ -1,5 +1,6 @@
 # Database dir is the directory you want to store your databases in.
-DatabaseDir: /home/tyler/git/databases
+# It can be a git repo, but doesn't have to be...
+DatabaseDir: /home/username/git/databases
 
 # RealDatabase is the legit database
 RealDatabase: balesDatabase.db

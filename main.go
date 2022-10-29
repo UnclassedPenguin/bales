@@ -28,6 +28,7 @@ import (
   "regexp"
   "io/ioutil"
   "gopkg.in/yaml.v2"
+  "path/filepath"
 )
 
 
@@ -284,7 +285,8 @@ func main() {
 
 
   // Read Config file and setup databases
-  configFile, err := ioutil.ReadFile("./config.yaml")
+  home, _ := os.UserHomeDir()
+  configFile, err := ioutil.ReadFile(filepath.Join(home, ".config/bales/config.yaml"))
   if err != nil {
     fmt.Println("Error reading config file:\n", err)
   }
