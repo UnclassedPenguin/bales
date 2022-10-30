@@ -22,6 +22,7 @@ TestDatabase: balesTestDatabase.db
 
 
 ## To-do:
+  - Add ability to sort by date oldest/newest newest/oldest
   - Add check for config file, if not, prompt user to make the config file at ~/.config/bales
   - Restructure code so its not all stuck in main
   - make default list only list the current month. add -all flag to show entire database
