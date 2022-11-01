@@ -16,12 +16,15 @@ Then, you need to create the config file at `~/.config/bales/config.yaml`
 ```yaml
 # Database dir is the directory you want to store your databases in.
 # It can be a git repo, but doesn't have to be...
+# This directory must be created by the user
 DatabaseDir: /home/username/git/databases
 
 # RealDatabase is the legit database
+# This will be created if it doesn't exist
 RealDatabase: balesDatabase.db
 
 # TestDatabase is a database you can use to test features
+# This will be created if it doesn't exist
 TestDatabase: balesTestDatabase.db
 
 ```
