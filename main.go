@@ -5,7 +5,7 @@
 //  
 // Author: Tyler(UnclassedPenguin)
 //    URL: https://unclassed.ca
-// GitHub: https://github.com/UnclassedPenguin
+// GitHub: https://github.com/UnclassedPenguin/bales/
 //   Desc: A program to keep track of how many bales have been fed to animals.
 //
 //-------------------------------------------------------------------------------
