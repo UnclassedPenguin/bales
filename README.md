@@ -35,6 +35,7 @@ For further documentation checkout [docs.unclassed.ca](https://docs.unclassed.ca
 
 
 ## To-do:
+  - Add sort by days (similar to years and months) where it can be a specific day or a range...
   - Make default list only list the current month. add -all flag to show entire database
   - Add ability for "or" to group. So command line would be "-g "cows or sheep"", but it would split it to sql: "animalgroup='cows' OR animalgroup='sheep'"
   - Add an ability to get average. For square/round. Maybe by group as well. For daily weekly monthly?
