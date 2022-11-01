@@ -15,17 +15,17 @@
 package main
 
 import (
-  "fmt"
   "os"
-  "os/exec"
-  "database/sql"
-  _ "github.com/mattn/go-sqlite3"
+  "fmt"
   "time"
   "flag"
   "strings"
+  "os/exec"
   "io/ioutil"
-  "gopkg.in/yaml.v2"
+  "database/sql"
   "path/filepath"
+  "gopkg.in/yaml.v2"
+  _ "github.com/mattn/go-sqlite3"
   "github.com/unclassedpenguin/bales/database"
   "github.com/unclassedpenguin/bales/config"
   "github.com/unclassedpenguin/bales/functions"
