@@ -201,6 +201,8 @@ func main() {
   var round   bool
   var version bool
   var debug   bool
+  var dateNewToOld bool
+  var dateOldToNew bool
   var number  int
   var group   string
   var year    string
@@ -208,18 +210,20 @@ func main() {
   var date    string
   var custom  string
 
-  flag.BoolVar(&info,     "i",      false, "Prints some information you might need to remember.")
-  flag.BoolVar(&list,     "l",      false, "Prints the Database to terminal. Optionally you can use -g, -s, -r, -y, -m, -date...")
-  flag.BoolVar(&test,     "t",      false, "If set, uses the test database.")
-  flag.BoolVar(&add,      "a",      false, "Adds a record to the database. If set, requires -g (group) and -n (number of bales).")
-  flag.BoolVar(&del,      "d",      false, "Deletes a record from the database. If set, requires -n (id number of entry to delete).")
-  flag.BoolVar(&square,   "s",      false, "If set, indicates that the bale is square. Round is the default. This can be used when adding (-a) a record, or when listing (-l) to specify that you only want to see square bales.")
-  flag.BoolVar(&round,    "r",      false, "If set, indicates that the bale is round. Round is the default. This can be used when adding (-a) a record, or when listing (-l) to specify that you only want to see round bales.")
-  flag.BoolVar(&push,     "push",   false, "Pushes the databases with git.")
-  flag.BoolVar(&pull,     "pull",   false, "Pulls the databases with git.")
-  flag.BoolVar(&status,   "status", false, "Checks the git status on project.")
-  flag.BoolVar(&version,  "v",      false, "Print the version number and exit.")
-  flag.BoolVar(&debug,    "debug",  false, "Execute function for debugging.")
+  flag.BoolVar(&info,         "i",        false, "Prints some information you might need to remember.")
+  flag.BoolVar(&list,         "l",        false, "Prints the Database to terminal. Optionally you can use -g, -s, -r, -y, -m, -date...")
+  flag.BoolVar(&test,         "t",        false, "If set, uses the test database.")
+  flag.BoolVar(&add,          "a",        false, "Adds a record to the database. If set, requires -g (group) and -n (number of bales).")
+  flag.BoolVar(&del,          "d",        false, "Deletes a record from the database. If set, requires -n (id number of entry to delete).")
+  flag.BoolVar(&square,       "s",        false, "If set, indicates that the bale is square. Round is the default. This can be used when adding (-a) a record, or when listing (-l) to specify that you only want to see square bales.")
+  flag.BoolVar(&round,        "r",        false, "If set, indicates that the bale is round. Round is the default. This can be used when adding (-a) a record, or when listing (-l) to specify that you only want to see round bales.")
+  flag.BoolVar(&push,         "push",     false, "Pushes the databases with git.")
+  flag.BoolVar(&pull,         "pull",     false, "Pulls the databases with git.")
+  flag.BoolVar(&status,       "status",   false, "Checks the git status on project.")
+  flag.BoolVar(&version,      "v",        false, "Print the version number and exit.")
+  flag.BoolVar(&debug,        "debug",    false, "Execute function for debugging.")
+  flag.BoolVar(&dateNewToOld, "datentoo", false, "Order by date, New to Old. Requires -l")
+  flag.BoolVar(&dateOldToNew, "dateoton", false, "Order by date, Old to New. Requires -l")
 
   flag.StringVar(&group,  "g",      "",    "The name of the group to add to database.")
   flag.StringVar(&year,   "y",      "",    "Year to list from database. Can be a single year(ie 2019) or a range (ie 2019-2022)")
@@ -405,10 +409,14 @@ func main() {
     // recordStrings collects the sql phrases for each different flag. 
     var recordStrings []string
 
+    // Used to order by date
+    var dateOrder string
+
     // This is the beginning of all queries to the database. I always want every column 
     // returned. So if no options are set, this is sent to fetchRecords all by itself.
     // Otherwise, everything else is added onto this string.
     baseString := "SELECT * FROM bales"
+
 
     // Group is -g flag
     if group != "" {
@@ -485,6 +493,18 @@ func main() {
       }
     }
 
+    // Oders by date either ascending or descending 
+    if dateOldToNew && !dateNewToOld{
+      dateOrder = " ORDER BY date ASC"
+    } else if dateNewToOld && !dateOldToNew{
+      dateOrder = " ORDER BY date DESC"
+    } else if dateNewToOld && dateOldToNew {
+      fmt.Println("Error:\nYou can't use both dateoton and datentoo. Conflict order by ascending and descending.")
+      exit(db, 1)
+    } else {
+      dateOrder = ""
+    }
+
     // This is the area that puts the sql phrase together and sends it to the fetchRecords
     // function.
     // I set it up to pay attention to three scenarios: No additional phrase, 1 additional
@@ -494,14 +514,15 @@ func main() {
     // which returns the entire database.
     if len(recordStrings) == 0 {
       fmt.Println("Date: ", timeStr)
-      fmt.Println("SQL Query:", baseString)
-      record, err := db.Query(baseString)
+      fullString := fmt.Sprint(baseString + dateOrder)
+      fmt.Println("SQL Query:", fullString)
+      record, err := db.Query(fullString)
       fetchRecord(db, record, err)
       exit(db, 0)
     // If there is one additional phrase, it appends WHERE and the phrase to base string,
     } else if len(recordStrings) == 1 {
       fmt.Println("Date: ", timeStr)
-      fullString := fmt.Sprint(baseString + " WHERE " + recordStrings[0])
+      fullString := fmt.Sprint(baseString + " WHERE " + recordStrings[0] + dateOrder)
       fmt.Println("SQL Query:", fullString)
       record, err := db.Query(fullString)
       fetchRecord(db, record, err)
@@ -511,7 +532,7 @@ func main() {
     } else if len(recordStrings) > 1 {
       fmt.Println("Date: ", timeStr)
       combineStrings := strings.Join(recordStrings, " AND ")
-      fullString := fmt.Sprint(baseString + " WHERE " + combineStrings)
+      fullString := fmt.Sprint(baseString + " WHERE " + combineStrings + dateOrder)
       fmt.Println("SQL Query:", fullString)
       record, err := db.Query(fullString)
       fetchRecord(db, record, err)
