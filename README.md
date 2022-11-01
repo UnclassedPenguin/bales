@@ -28,10 +28,11 @@ TestDatabase: balesTestDatabase.db
 
 
 ## To-do:
-  - Restructure code so its not all stuck in main
   - Make default list only list the current month. add -all flag to show entire database
   - Add ability for "or" to group. So command line would be "-g "cows or sheep"", but it would split it to sql: "animalgroup='cows' OR animalgroup='sheep'"
   - Add an ability to get average. For square/round. Maybe by group as well. For daily weekly monthly?
+  - ~~Restructure code so its not all stuck in main~~
+    - I split off all of the functions at least. I'm not sure if any of the main function can be split off? 
   - ~~Add datefrom function. Maybe -from. So you can list only from a specific date.~~
   - ~~Add ability to sort by date oldest/newest newest/oldest~~
   - ~~Add check for config file, if not, prompt user to make the config file at ~/.config/bales~~
