@@ -20,113 +20,17 @@ import (
   "os/exec"
   "database/sql"
   _ "github.com/mattn/go-sqlite3"
-  "github.com/jedib0t/go-pretty/v6/table"
-  "log"
   "time"
   "flag"
   "strings"
-  "regexp"
   "io/ioutil"
   "gopkg.in/yaml.v2"
   "path/filepath"
+  "github.com/unclassedpenguin/bales/database"
+  "github.com/unclassedpenguin/bales/config"
+  "github.com/unclassedpenguin/bales/functions"
 )
 
-
-// Create database file if doesn't exist
-func createDatabase(db string) {
-  _, err := os.Stat(db)
-  if os.IsNotExist(err) {
-    fmt.Println("Database doesn't exist. Creating...")
-    file, err := os.Create(db)
-    if err != nil {
-        log.Fatal(err)
-    }
-    file.Close()
-  }
-}
-
-// Creates table in database if doesn't exist
-func createTable(db *sql.DB) {
-  balesTable := `CREATE TABLE IF NOT EXISTS bales(
-        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        "Date" TEXT,
-        "AnimalGroup" TEXT,
-        "TypeOfBale" TEXT,
-        "NumOfBales" INT);`
-  query, err := db.Prepare(balesTable)
-  if err != nil {
-      log.Fatal(err)
-  }
-  query.Exec()
-}
-
-// Adds a record to database
-func addRecord(db *sql.DB, Date string, AnimalGroup string, TypeOfBale string, NumOfBales int) {
-  records := "INSERT INTO bales(Date, AnimalGroup, TypeOfBale, NumOfBales) VALUES (?, ?, ?, ?)"
-  query, err := db.Prepare(records)
-  if err != nil {
-    log.Fatal(err)
-  }
-  _, err = query.Exec(Date, AnimalGroup, TypeOfBale, NumOfBales)
-  if err != nil {
-    log.Fatal(err)
-  }
-}
-
-// Deletes a record from database
-func deleteRecord(db *sql.DB, id int) {
-  records := "DELETE FROM bales where id = ?"
-  query, err := db.Prepare(records)
-  if err != nil {
-    log.Fatal(err)
-  }
-  _, err = query.Exec(id)
-  if err != nil {
-    log.Fatal(err)
-  }
-}
-
-// Fetches a record from database
-// Uses github.com/jedib0t/go-pretty/v6/table tables to print it out pretty.
-func fetchRecord(db *sql.DB, record *sql.Rows, err error) {
-  if err != nil {
-    log.Fatal(err)
-  }
-  defer record.Close()
-
-  totalSlice := []int{}
-  var total int
-
-  t := table.NewWriter()
-  t.SetOutputMirror(os.Stdout)
-
-  t.AppendHeader(table.Row{"id", "Date", "Group", "TypeOfBale", "NumOfBale"})
-
-  // I don't remember why I declared the variables in the for loop?
-  // Is this needed? It would probably be more efficient to declare them
-  // outside the loop, if possible. Look into it, and see if they can be moved.
-  for record.Next() {
-    var id int
-    var Date string
-    var AnimalGroup string
-    var TypeOfBale string
-    var NumOfBales int
-    record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
-    totalSlice = append(totalSlice, NumOfBales)
-    t.AppendRows([]table.Row{{id, Date, AnimalGroup, TypeOfBale, NumOfBales}})
-  }
-
-  // adds up the slice to tell you the total number of bales
-  for _, num := range totalSlice {
-    total += num
-  }
-
-  t.AppendFooter(table.Row{"", "", "", "Total:", total})
-  t.SetStyle(table.StyleLight)
-  // This separates rows...Not sure I like it, leave it for now.
-  //t.Style().Options.SeparateRows = true
-  t.Render()
-}
 
 // s for give me some (s)pace
 func s() {
@@ -141,67 +45,12 @@ func exit(db *sql.DB, status int) {
   os.Exit(status)
 }
 
-// For flag -i. Should add some more useful (i)nfo here,
-// but this is helpful for now.
-func printInfo() {
-  fmt.Println("UnclassedPenguin Bale Tracker")
-  fmt.Println("")
-  fmt.Println("Groups: sheep, bgoats, lgoats, horses, bulls, cows")
-  fmt.Println("Types of bales: square (-s), round (-r)(default)")
-  fmt.Println("Sql Table: bales")
-  fmt.Println("Sql Columns: id, Date, AnimalGroup, TypeOfBale, NumOfBales")
-  fmt.Println("Sql Dates: can use strftime('%Y', date) for year. can use '%m' for month")
-  fmt.Println("           and '%d' for day.")
-  os.Exit(0)
-}
-
-// A fucntion to check that the date is correct format
-func checkDate(date string) {
-  // Use regexp to check date to make sure it is a valid yyyy-mm-dd date
-  dateCheck, err := regexp.MatchString("^\\d{4}-\\d{2}-\\d{2}$", date)
-  if err != nil {
-    fmt.Println("Error in dateCheck: ", err)
-    os.Exit(1)
-  }
-
-  // If Regexp check fails, print error and exit,
-  // prompting user to use a proper format for date
-  if !dateCheck {
-    fmt.Println("Error:")
-    fmt.Println("It seems your date isn't the proper format. Please enter date as YYYY-MM-DD ie 2022-01-12")
-    os.Exit(1)
-  }
-}
-
-// Function to use for debugging or things
-func debugFunction() {
-  fmt.Println("Nothing here for now...")
-  os.Exit(0)
-}
-
-// For flag -v. Print version info
-func printVersion() {
-  fmt.Println("UnclassedPenguin Bale Tracker")
-  fmt.Println("v0.2.4")
-  os.Exit(0)
-}
-
-// Struct for configuration.
-type Configuration struct {
-  DatabaseDir  string`yaml:"DatabaseDir"`
-  RealDatabase string`yaml:"RealDatabase"`
-  TestDatabase string`yaml:"TestDatabase"`
-}
-
 // Global variable for databases. One for real, and one to test 
 // things with, that has garbage data in it.
-//const realDb = "database.db"
-//const testDb = "test-database.db"
 var (
   realDb string
   testDb string
 )
-
 
 // Main Function
 func main() {
@@ -275,17 +124,17 @@ func main() {
   // Handles cmd line flag -i 
   // Prints info and exits
   if info {
-    printInfo()
+    functions.PrintInfo()
   }
 
   // Handles cmd line flag -v 
   // Prints version and exits
   if version {
-    printVersion()
+    functions.PrintVersion()
   }
 
   if debug {
-    debugFunction()
+    functions.DebugFunction()
   }
 
   // Variable to hold the date
@@ -300,7 +149,7 @@ func main() {
   }
 
   // Use regexp to check date to make sure it is a valid yyyy-mm-dd date
-  checkDate(timeStr)
+  functions.CheckDate(timeStr)
 
   // Read Config file and setup databases
   home, _ := os.UserHomeDir()
@@ -310,7 +159,7 @@ func main() {
     os.Exit(1)
   }
 
-  var configData Configuration
+  var configData config.Configuration
   err = yaml.Unmarshal(configFile, &configData)
   if err != nil {
     fmt.Println("Error Unmarshal-ling yaml config file:\n", err)
@@ -345,23 +194,24 @@ func main() {
   }
 
   // Creates database if it hasn't been created yet.
-  createDatabase(databaseToUse)
+  database.CreateDatabase(databaseToUse)
 
   // Initialize database
   db, err := sql.Open("sqlite3", databaseToUse)
     if err != nil {
-        log.Fatal(err)
+      fmt.Println("Error initializing database")
+      os.Exit(1)
     }
 
   // Creates the table initially. "IF NOT EXISTS"
-  createTable(db)
+  database.CreateTable(db)
 
   // How to add entry:
-  // addRecord(db, timeStr, "Goats", "round", 2)
+  // database.AddRecord(db, timeStr, "Goats", "round", 2)
   // How to delete entry:
-  // deleteRecord(db, 2) // where 2 is id number of entry
+  // database.DeleteRecord(db, 2) // where 2 is id number of entry
   // How to query entire database
-  // fetchRecords(db)
+  // database.FetchRecords(db)
 
   // Var to hold the type of bale.
   var typeOfBale string
@@ -385,7 +235,7 @@ func main() {
     fmt.Println("Num of Bales: ", number)
     s()
     fmt.Println("Adding record...")
-    addRecord(db, timeStr, group, typeOfBale, number)
+    database.AddRecord(db, timeStr, group, typeOfBale, number)
     fmt.Println("Record added!")
     exit(db, 0)
   } else if add {
@@ -396,7 +246,7 @@ func main() {
   // Handles the command line way to delete record
   if del && number != 0 {
     fmt.Print("Deleting record ", number , "...\n")
-    deleteRecord(db, number)
+    database.DeleteRecord(db, number)
     fmt.Println("Record deleted!")
     exit(db, 0)
   } else if del {
@@ -412,7 +262,7 @@ func main() {
     if custom != "" {
       fmt.Println("Date: ", timeStr)
       record, err := db.Query(custom)
-      fetchRecord(db, record, err)
+      database.FetchRecord(db, record, err)
       exit(db, 0)
     }
 
@@ -505,7 +355,7 @@ func main() {
 
     // Select from this date to current date.
     if dateFrom != "" {
-      checkDate(dateFrom)
+      functions.CheckDate(dateFrom)
       dateFromString := "(strftime('%Y-%m-%d', date) between '" + dateFrom + "' and '" + timeStr + "')"
       recordStrings = append(recordStrings, dateFromString)
     }
@@ -534,7 +384,7 @@ func main() {
       fullString := fmt.Sprint(baseString + dateOrder)
       fmt.Println("SQL Query:", fullString)
       record, err := db.Query(fullString)
-      fetchRecord(db, record, err)
+      database.FetchRecord(db, record, err)
       exit(db, 0)
     // If there is one additional phrase, it appends WHERE and the phrase to base string,
     } else if len(recordStrings) == 1 {
@@ -542,7 +392,7 @@ func main() {
       fullString := fmt.Sprint(baseString + " WHERE " + recordStrings[0] + dateOrder)
       fmt.Println("SQL Query:", fullString)
       record, err := db.Query(fullString)
-      fetchRecord(db, record, err)
+      database.FetchRecord(db, record, err)
       exit(db, 0)
     // If there are more than one phrase to add, first it combines them with AND, and 
     // then adds that to baseString, with the connecting WHERE as well.
@@ -552,7 +402,7 @@ func main() {
       fullString := fmt.Sprint(baseString + " WHERE " + combineStrings + dateOrder)
       fmt.Println("SQL Query:", fullString)
       record, err := db.Query(fullString)
-      fetchRecord(db, record, err)
+      database.FetchRecord(db, record, err)
       exit(db, 0)
     }
   }
@@ -635,5 +485,5 @@ func main() {
   }
 
   // This runs if no arguments are specified.
-  fmt.Println("No options specified. Try running with -h for usage")
+  fmt.Printf("%s: Try running with -h for usage", os.Args[0])
 }
