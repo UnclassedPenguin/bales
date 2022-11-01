@@ -189,26 +189,28 @@ var (
 func main() {
 
   // Flags
-  var info    bool
-  var list    bool
-  var test    bool
-  var add     bool
-  var del     bool
-  var push    bool
-  var pull    bool
-  var status  bool
-  var square  bool
-  var round   bool
-  var version bool
-  var debug   bool
-  var dateNewToOld bool
-  var dateOldToNew bool
-  var number  int
-  var group   string
-  var year    string
-  var month   string
-  var date    string
-  var custom  string
+  var (
+    info         bool
+    list         bool
+    test         bool
+    add          bool
+    del          bool
+    push         bool
+    pull         bool
+    status       bool
+    square       bool
+    round        bool
+    version      bool
+    debug        bool
+    dateNewToOld bool
+    dateOldToNew bool
+    number       int
+    group        string
+    year         string
+    month        string
+    date         string
+    custom       string
+  )
 
   flag.BoolVar(&info,         "i",        false, "Prints some information you might need to remember.")
   flag.BoolVar(&list,         "l",        false, "Prints the Database to terminal. Optionally you can use -g, -s, -r, -y, -m, -date...")
@@ -222,8 +224,8 @@ func main() {
   flag.BoolVar(&status,       "status",   false, "Checks the git status on project.")
   flag.BoolVar(&version,      "v",        false, "Print the version number and exit.")
   flag.BoolVar(&debug,        "debug",    false, "Execute function for debugging.")
-  flag.BoolVar(&dateNewToOld, "datentoo", false, "Order by date, New to Old. Requires -l")
-  flag.BoolVar(&dateOldToNew, "dateoton", false, "Order by date, Old to New. Requires -l")
+  flag.BoolVar(&dateNewToOld, "datentoo", false, "Order by date, New to Old. (date(n)ew(to)(o)ld) Requires -l")
+  flag.BoolVar(&dateOldToNew, "dateoton", false, "Order by date, Old to New. (date(o)ld(to)(n)ew) Requires -l")
 
   flag.StringVar(&group,  "g",      "",    "The name of the group to add to database.")
   flag.StringVar(&year,   "y",      "",    "Year to list from database. Can be a single year(ie 2019) or a range (ie 2019-2022)")
