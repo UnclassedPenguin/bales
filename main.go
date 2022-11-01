@@ -155,6 +155,24 @@ func printInfo() {
   os.Exit(0)
 }
 
+// A fucntion to check that the date is correct format
+func checkDate(date string) {
+  // Use regexp to check date to make sure it is a valid yyyy-mm-dd date
+  dateCheck, err := regexp.MatchString("^\\d{4}-\\d{2}-\\d{2}$", date)
+  if err != nil {
+    fmt.Println("Error in dateCheck: ", err)
+    os.Exit(1)
+  }
+
+  // If Regexp check fails, print error and exit,
+  // prompting user to use a proper format for date
+  if !dateCheck {
+    fmt.Println("Error:")
+    fmt.Println("It seems your date isn't the proper format. Please enter date as YYYY-MM-DD ie 2022-01-12")
+    os.Exit(1)
+  }
+}
+
 // Function to use for debugging or things
 func debugFunction() {
   fmt.Println("Nothing here for now...")
@@ -209,6 +227,7 @@ func main() {
     year         string
     month        string
     date         string
+    dateFrom     string
     custom       string
   )
 
@@ -231,6 +250,7 @@ func main() {
   flag.StringVar(&year,   "y",      "",    "Year to list from database. Can be a single year(ie 2019) or a range (ie 2019-2022)")
   flag.StringVar(&month,  "m",      "",    "Month to list from database. Can be a single month(ie 09) or a range (ie 09-12). Single digit months require a leading 0.")
   flag.StringVar(&date,   "date",   "",    "The date to put into the database, if not today. yyyy-mm-dd")
+  flag.StringVar(&dateFrom,   "from",   "",    "List from specified date to current date. Date must be yyyy-mm-dd requires -l")
   flag.StringVar(&custom, "c",      "",    "Custom SQL request. Requires -l. Example:\nbales -t -l -c \"SELECT * FROM bales WHERE strftime('%d', date) BETWEEN '01' AND '03'\"")
 
   flag.IntVar(&number,    "n",       0,    "The number of bales to add/ or the id of the record to delete .")
@@ -280,19 +300,7 @@ func main() {
   }
 
   // Use regexp to check date to make sure it is a valid yyyy-mm-dd date
-  dateCheck, err := regexp.MatchString("^\\d{4}-\\d{2}-\\d{2}$", timeStr)
-  if err != nil {
-    fmt.Println("Error in dateCheck: ", err)
-    os.Exit(1)
-  }
-
-  // If Regexp check fails, print error and exit,
-  // prompting user to use a proper format for date
-  if !dateCheck {
-    fmt.Println("Error:")
-    fmt.Println("It seems your date isn't the proper format. Please enter date as YYYY-MM-DD ie 2022-01-12")
-    os.Exit(1)
-  }
+  checkDate(timeStr)
 
   // Read Config file and setup databases
   home, _ := os.UserHomeDir()
@@ -493,6 +501,12 @@ func main() {
         monthString := fmt.Sprint("strftime('%m', date)='" + month + "'")
         recordStrings = append(recordStrings, monthString)
       }
+    }
+
+    // Select from this date to current date.
+    if dateFrom != "" {
+      dateFromString := "(strftime('%Y-%m-%d', date) between '" + dateFrom + "' and '" + timeStr + "')"
+      recordStrings = append(recordStrings, dateFromString)
     }
 
     // Oders by date either ascending or descending 
