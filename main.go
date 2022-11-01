@@ -505,6 +505,7 @@ func main() {
 
     // Select from this date to current date.
     if dateFrom != "" {
+      checkDate(dateFrom)
       dateFromString := "(strftime('%Y-%m-%d', date) between '" + dateFrom + "' and '" + timeStr + "')"
       recordStrings = append(recordStrings, dateFromString)
     }
