@@ -29,6 +29,10 @@ TestDatabase: balesTestDatabase.db
 
 ```
 
+Don't forget to edit the DatabaseDir to where you want to store the databases. You just have to create the folder, the databases will be created if they don't exist.
+
+For further documentation checkout [docs.unclassed.ca](https://docs.unclassed.ca/docs/programs/bales.html)
+
 
 ## To-do:
   - Make default list only list the current month. add -all flag to show entire database
