@@ -50,5 +50,3 @@ func PrintVersion() {
   fmt.Println("v0.3.0")
   os.Exit(0)
 }
-
-
