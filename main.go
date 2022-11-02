@@ -282,8 +282,15 @@ func main() {
 
     // Group is -g flag
     if group != "" {
-      groupString := fmt.Sprint("Animalgroup='" + group + "'")
-      recordStrings = append(recordStrings, groupString)
+      contains := strings.Contains(group, " or ")
+      if contains {
+        groups := strings.Split(group, " or ")
+        groupString := fmt.Sprint("Animalgroup='" + groups[0] +"' or AnimalGroup='" + groups[1] + "'")
+        recordStrings = append(recordStrings, groupString)
+      } else {
+        groupString := fmt.Sprint("Animalgroup='" + group + "'")
+        recordStrings = append(recordStrings, groupString)
+      }
     }
 
     if date != "" {
