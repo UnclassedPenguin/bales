@@ -530,5 +530,5 @@ func main() {
   }
 
   // This runs if no arguments are specified.
-  fmt.Printf("%s: Try running with -h for usage", os.Args[0])
+  fmt.Printf("%s: Try running with -h for usage\n", os.Args[0])
 }
