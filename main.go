@@ -294,6 +294,7 @@ func main() {
           groupStrings = append(groupStrings, str)
         }
         groupString := strings.Join(groupStrings, " OR ")
+        groupString = fmt.Sprint("(" + groupString + ")")
         recordStrings = append(recordStrings, groupString)
       // Runs if only one group specified.
       } else {
