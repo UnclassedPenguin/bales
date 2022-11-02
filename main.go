@@ -271,6 +271,9 @@ func main() {
     // recordStrings collects the sql phrases for each different flag. 
     var recordStrings []string
 
+    // groupStrings collects the
+    var groupStrings []string
+
     // Used to order by date
     var dateOrder string
 
@@ -283,12 +286,18 @@ func main() {
     // Group is -g flag
     if group != "" {
       contains := strings.Contains(group, " or ")
+      // Runs if you use -g "cows or sheep", can be more than two. Must be separated by " or "
       if contains {
         groups := strings.Split(group, " or ")
-        groupString := fmt.Sprint("Animalgroup='" + groups[0] +"' or AnimalGroup='" + groups[1] + "'")
+        for _, g := range groups {
+          str := fmt.Sprint("AnimalGroup='" + g + "'")
+          groupStrings = append(groupStrings, str)
+        }
+        groupString := strings.Join(groupStrings, " OR ")
         recordStrings = append(recordStrings, groupString)
+      // Runs if only one group specified.
       } else {
-        groupString := fmt.Sprint("Animalgroup='" + group + "'")
+        groupString := fmt.Sprint("AnimalGroup='" + group + "'")
         recordStrings = append(recordStrings, groupString)
       }
     }
