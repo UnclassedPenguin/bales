@@ -75,6 +75,7 @@ func main() {
     group        string
     year         string
     month        string
+    day          string
     date         string
     dateFrom     string
     custom       string
@@ -95,14 +96,15 @@ func main() {
   flag.BoolVar(&dateNewToOld, "datentoo", false, "Order by date, New to Old. (date(n)ew(to)(o)ld) Requires -l")
   flag.BoolVar(&dateOldToNew, "dateoton", false, "Order by date, Old to New. (date(o)ld(to)(n)ew) Requires -l")
 
-  flag.StringVar(&group,  "g",      "",    "The name of the group to add to database.")
-  flag.StringVar(&year,   "y",      "",    "Year to list from database. Can be a single year(ie 2019) or a range (ie 2019-2022)")
-  flag.StringVar(&month,  "m",      "",    "Month to list from database. Can be a single month(ie 09) or a range (ie 09-12). Single digit months require a leading 0.")
-  flag.StringVar(&date,   "date",   "",    "The date to put into the database, if not today. yyyy-mm-dd")
+  flag.StringVar(&group,      "g",      "",    "The name of the group to add to database.")
+  flag.StringVar(&year,       "year",      "",    "Year to list from database. Can be a single year(ie 2019) or a range (ie 2019-2022)")
+  flag.StringVar(&month,      "month",      "",    "Month to list from database. Can be a single month(ie 09) or a range (ie 09-12). Single digit months require a leading 0.")
+  flag.StringVar(&day,       "day",      "",    "day to list from database. Can be a single day(ie 19) or a range (ie 09-30)")
+  flag.StringVar(&date,       "date",   "",    "The date to put into the database, if not today. yyyy-mm-dd")
   flag.StringVar(&dateFrom,   "from",   "",    "List from specified date to current date. Date must be yyyy-mm-dd requires -l")
-  flag.StringVar(&custom, "c",      "",    "Custom SQL request. Requires -l. Example:\nbales -t -l -c \"SELECT * FROM bales WHERE strftime('%d', date) BETWEEN '01' AND '03'\"")
+  flag.StringVar(&custom,     "c",      "",    "Custom SQL request. Requires -l. Example:\nbales -t -l -c \"SELECT * FROM bales WHERE strftime('%d', date) BETWEEN '01' AND '03'\"")
 
-  flag.IntVar(&number,    "n",       0,    "The number of bales to add/ or the id of the record to delete .")
+  flag.IntVar(&number,        "n",       0,    "The number of bales to add/ or the id of the record to delete .")
 
   // This changes the help/usage info when -h is used.
   flag.Usage = func() {
@@ -301,7 +303,7 @@ func main() {
       exit(db, 1)
     }
 
-    // year is -y flag
+    // year is -year flag
     if year != "" {
       contains := strings.Contains(year, "-")
 
@@ -327,7 +329,7 @@ func main() {
       }
     }
 
-    // month is -m flag
+    // month is -month flag
     if month != "" {
       contains := strings.Contains(month, "-")
 
@@ -350,6 +352,32 @@ func main() {
         }
         monthString := fmt.Sprint("strftime('%m', date)='" + month + "'")
         recordStrings = append(recordStrings, monthString)
+      }
+    }
+
+    // day is -day flag
+    if day != "" {
+      contains := strings.Contains(day, "-")
+
+      // This handles if you have a range of days. must be written as i.e. 05-10
+      if contains {
+        days := strings.Split(day, "-")
+        // Lets the user know that the month requires a leading 0, instead of just returning an empty database.
+        if len(days[0]) != 2 || len(days[1]) != 2 {
+          fmt.Println("Your day appears to be wrong. Make sure each day is exactly 2 digits. If its a single digit month, add a leading zero, ie 05.")
+          exit(db, 1)
+        }
+        dayString := "(strftime('%d', date) between '" + string(days[0]) + "' and '" + string(days[1]) + "')"
+        recordStrings = append(recordStrings, dayString)
+      // This handles single day
+      } else {
+        // Lets the user know that the day requires a leading 0, instead of just returning an empty database.
+        if len(day) != 2 {
+          fmt.Println("Your day appears to be wrong. Make sure each day is exactly 2 digits. If its a single digit month, add a leading zero, ie 05.")
+          exit(db, 1)
+        }
+        dayString := fmt.Sprint("strftime('%d', date)='" + day + "'")
+        recordStrings = append(recordStrings, dayString)
       }
     }
 
