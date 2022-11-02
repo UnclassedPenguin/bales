@@ -26,8 +26,8 @@ import (
   "path/filepath"
   "gopkg.in/yaml.v2"
   _ "github.com/mattn/go-sqlite3"
-  "github.com/unclassedpenguin/bales/database"
   "github.com/unclassedpenguin/bales/config"
+  "github.com/unclassedpenguin/bales/database"
   "github.com/unclassedpenguin/bales/functions"
 )
 
@@ -96,15 +96,15 @@ func main() {
   flag.BoolVar(&dateNewToOld, "datentoo", false, "Order by date, New to Old. (date(n)ew(to)(o)ld) Requires -l")
   flag.BoolVar(&dateOldToNew, "dateoton", false, "Order by date, Old to New. (date(o)ld(to)(n)ew) Requires -l")
 
-  flag.StringVar(&group,      "g",      "",    "The name of the group to add to database.")
-  flag.StringVar(&year,       "year",      "",    "Year to list from database. Can be a single year(ie 2019) or a range (ie 2019-2022)")
-  flag.StringVar(&month,      "month",      "",    "Month to list from database. Can be a single month(ie 09) or a range (ie 09-12). Single digit months require a leading 0.")
-  flag.StringVar(&day,       "day",      "",    "day to list from database. Can be a single day(ie 19) or a range (ie 09-30)")
-  flag.StringVar(&date,       "date",   "",    "The date to put into the database, if not today. yyyy-mm-dd")
-  flag.StringVar(&dateFrom,   "from",   "",    "List from specified date to current date. Date must be yyyy-mm-dd requires -l")
-  flag.StringVar(&custom,     "c",      "",    "Custom SQL request. Requires -l. Example:\nbales -t -l -c \"SELECT * FROM bales WHERE strftime('%d', date) BETWEEN '01' AND '03'\"")
+  flag.StringVar(&group,      "g",        "",    "The name of the group to add to database.")
+  flag.StringVar(&year,       "year",     "",    "Year to list from database. Can be a single year(ie 2019) or a range (ie 2019-2022)")
+  flag.StringVar(&month,      "month",    "",    "Month to list from database. Can be a single month(ie 09) or a range (ie 09-12). Single digit months require a leading 0.")
+  flag.StringVar(&day,       "day",       "",    "day to list from database. Can be a single day(ie 19) or a range (ie 09-30)")
+  flag.StringVar(&date,       "date",     "",    "The date to put into the database, if not today. yyyy-mm-dd")
+  flag.StringVar(&dateFrom,   "from",     "",    "List from specified date to current date. Date must be yyyy-mm-dd requires -l")
+  flag.StringVar(&custom,     "c",        "",    "Custom SQL request. Requires -l. Example:\nbales -t -l -c \"SELECT * FROM bales WHERE strftime('%d', date) BETWEEN '01' AND '03'\"")
 
-  flag.IntVar(&number,        "n",       0,    "The number of bales to add/ or the id of the record to delete .")
+  flag.IntVar(&number,        "n",        0,     "The number of bales to add/ or the id of the record to delete .")
 
   // This changes the help/usage info when -h is used.
   flag.Usage = func() {
