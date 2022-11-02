@@ -35,6 +35,7 @@ For further documentation checkout [docs.unclassed.ca](https://docs.unclassed.ca
 
 
 ## To-do:
+  - Add "-between" to list dates between one and another
   - Make default list only list the current month. add -all flag to show entire database
     - Do I actually want this? Hmm...
   - Add an ability to get average. For square/round. Maybe by group as well. For daily weekly monthly?
