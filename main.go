@@ -237,13 +237,6 @@ func main() {
   // Creates the table initially. "IF NOT EXISTS"
   database.CreateTable(db)
 
-  // How to add entry:
-  // database.AddRecord(db, timeStr, "Goats", "round", 2)
-  // How to delete entry:
-  // database.DeleteRecord(db, 2) // where 2 is id number of entry
-  // How to query entire database
-  // database.FetchRecords(db)
-
   // Var to hold the type of bale.
   var typeOfBale string
 
