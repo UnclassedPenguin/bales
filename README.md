@@ -35,6 +35,7 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
 
 
 ## To-do:
+  - add Ability to delete groups. Maybe add a comfirmation "Are you sure you want to delete group cows? (y or n)"
   - Add "-between" to list dates between one and another
   - Make default list only list the current month. add -all flag to show entire database
     - Do I actually want this? Hmm...
