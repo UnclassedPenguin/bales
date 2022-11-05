@@ -140,8 +140,9 @@ func main() {
       description := "Description of %s:\n\n" +
        "This is a program to use to keep track of bales that have been fed.\n" +
        "It's useful to have the data to see how many bales you go through for the winter.\n\n" +
-       "Usage:\n\nbales [-t] [-l [-g group] [-s | -r] [-y year] [-m month]] " +
-       "[-a [-date YYYY-MM-DD] -g group [-s | -r] -n num] [-d -n num]\n\n" +
+       "Usage:\n\n" +
+       "bales [-t] [-l [-g group] [-s | -r] [-year year] [-month month] [-day day] " +
+       "[-a [-date YYYY-MM-DD] -g group [-s | -r] -n num] [-d [-n num || -g group]]\n\n" +
        "Available arguments:\n"
       fmt.Fprintf(w, description, os.Args[0])
       flag.PrintDefaults()
