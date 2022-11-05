@@ -35,12 +35,12 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
 
 
 ## To-do:
-  - add Ability to delete groups. Maybe add a comfirmation "Are you sure you want to delete group cows? (y or n)"
   - Add "-between" to list dates between one and another
   - Make default list only list the current month. add -all flag to show entire database
     - Do I actually want this? Hmm...
   - Add an ability to get average. For square/round. Maybe by group as well. For daily weekly monthly?
     - Think this will be slightly more complicated than I originally thought...
+  - ~~Add Ability to delete groups. Maybe add a comfirmation "Are you sure you want to delete group cows? (y or n)"~~
   - ~~Add ability for "or" to group. So command line would be "-g "cows or sheep"", but it would split it to sql: "animalgroup='cows' OR animalgroup='sheep'"~~
   - ~~Add sort by days (similar to years and months) where it can be a specific day or a range...~~
   - ~~Restructure code so its not all stuck in main~~
