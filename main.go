@@ -91,7 +91,8 @@ func main() {
   flag.BoolVar(         &add,        "a", false,
     "Adds a record to the database. If set, requires -g (group) and -n (number of bales).")
   flag.BoolVar(         &del,        "d", false,
-    "Deletes a record from the database. If set, requires -n (id number of entry to delete).")
+    "Deletes a record from the database. If set, requires -n (id number of entry to delete),\n" +
+    "or -g (animal group to delete).")
   flag.BoolVar(      &square,        "s", false,
     "If set, indicates that the bale is square. Round is the default. \nThis can be used when " +
     "adding (-a) a record, or when listing (-l) \nto specify that you only want to see square bales.")
