@@ -31,7 +31,7 @@ TestDatabase: balesTestDatabase.db
 
 Don't forget to edit the DatabaseDir to where you want to store the databases. You just have to create the folder, the databases will be created if they don't exist.
 
-For further documentation checkout [docs.unclassed.ca](https://docs.unclassed.ca/docs/programs/bales.html)
+For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclassed.ca/bales)
 
 
 ## To-do:
