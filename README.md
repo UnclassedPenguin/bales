@@ -6,7 +6,7 @@
 To install:
 
 ```shell
-$ go get install github.com/unclassedpenguin/bales@latest
+$ go install github.com/unclassedpenguin/bales@latest
 ```
 
 Then, you need to create the config file at `~/.config/bales/config.yaml`
