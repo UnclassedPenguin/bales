@@ -19,6 +19,7 @@ import (
   "fmt"
   "time"
   "flag"
+  "strconv"
   "strings"
   "os/exec"
   "io/ioutil"
@@ -272,14 +273,36 @@ func main() {
   }
 
   // Handles the command line way to delete record
-  if del && number != 0 {
-    fmt.Print("Deleting record ", number , "...\n")
-    database.DeleteRecord(db, number)
-    fmt.Println("Record deleted!")
-    exit(db, 0)
-  } else if del {
-    fmt.Println("Requires -n (ID number of record to delete)! Try again, or try -h for help.")
-    exit(db, 1)
+  if del {
+    if number != 0 && group == "" {
+      fmt.Print("Deleting record ", number , "...\n")
+      str := fmt.Sprint("DELETE FROM bales WHERE id=" + strconv.Itoa(number))
+      database.DeleteRecord(db, str)
+      fmt.Println("Record deleted!")
+      exit(db, 0)
+    } else if number == 0 && group != "" {
+      var choice string
+      fmt.Print("Are you sure you want to delete ALL entries for group '" + group + "'? (y or n)\n")
+      fmt.Print(" > ")
+      fmt.Scan(&choice)
+      if strings.ToLower(choice) == "y" || strings.ToLower(choice) == "yes" {
+        fmt.Print("Deleting group ", group , "...\n")
+        str := fmt.Sprint("DELETE FROM bales WHERE AnimalGroup='" + group + "'")
+        database.DeleteRecord(db, str)
+        fmt.Println("Records deleted!")
+        exit(db, 0)
+      } else {
+        fmt.Println("Ok, not deleting group '" + group + "'.")
+        exit(db, 0)
+      }
+    } else if number != 0 && group != "" {
+      fmt.Println("Error:")
+      fmt.Println("Can't use -n and -g together. Try -h for usage")
+      exit(db, 1)
+    } else {
+      fmt.Println("Requires -n (ID number of record to delete) or -g (Group to delete)! Try again, or try -h for help.")
+      exit(db, 1)
+    }
   }
 
   // Handles command line way to list records. 

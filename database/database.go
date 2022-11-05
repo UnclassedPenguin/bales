@@ -51,13 +51,12 @@ func AddRecord(db *sql.DB, Date string, AnimalGroup string, TypeOfBale string, N
 }
 
 // Deletes a record from database
-func DeleteRecord(db *sql.DB, id int) {
-  records := "DELETE FROM bales where id = ?"
-  query, err := db.Prepare(records)
+func DeleteRecord(db *sql.DB, str string) {
+  query, err := db.Prepare(str)
   if err != nil {
     log.Fatal(err)
   }
-  _, err = query.Exec(id)
+  _, err = query.Exec()
   if err != nil {
     log.Fatal(err)
   }
