@@ -46,7 +46,7 @@ For further documentation checkout [docs.unclassed.ca](https://docs.unclassed.ca
     - I split off all of the functions at least. I'm not sure if any of the main function can be split off? 
   - ~~Add datefrom function. Maybe -from. So you can list only from a specific date.~~
   - ~~Add ability to sort by date oldest/newest newest/oldest~~
-  - ~~Add check for config file, if not, prompt user to make the config file at ~/.config/bales~~
+  - ~~Add check for config file, if not, prompt user to make the config file at \~/.config/bales~~
   - ~~I'd like to add a config file and store the database somewhere separate(referenced by the config file), and then put it on github maybe? Although then the database would be specific to a computer and you would have to worry about backing it up/sharing it on your own...Something to think about.~~
     - I think this would work. Make a separate folder for the database(also a git folder), and make that the folder that bales -push and -pull works on. So it still updates the database, can still sync the database between computers, and not share the private data...
   - ~~Add -date to list function, so you can see on a specific day what you used...After the work I did to rewrite the list function, it should be fairly easy to add more features like this.~~
