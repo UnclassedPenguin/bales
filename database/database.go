@@ -79,6 +79,7 @@ func FetchRecord(db *sql.DB, record *sql.Rows, err error) {
     AnimalGroup string
     TypeOfBale string
     NumOfBales int
+    recordCount int
   )
 
   t := table.NewWriter()
@@ -88,6 +89,7 @@ func FetchRecord(db *sql.DB, record *sql.Rows, err error) {
 
   // Loop over records and add them to the table
   for record.Next() {
+    recordCount++
     record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
     totalSlice = append(totalSlice, NumOfBales)
     t.AppendRows([]table.Row{{id, Date, AnimalGroup, TypeOfBale, NumOfBales}})
@@ -100,8 +102,14 @@ func FetchRecord(db *sql.DB, record *sql.Rows, err error) {
 
   t.AppendFooter(table.Row{"", "", "", "Total:", total})
   t.SetStyle(table.StyleLight)
-  // This separates rows...Not sure I like it, leave it for now.
+
+  // To have a line separate all rows, uncomment next line.
   //t.Style().Options.SeparateRows = true
-  t.Render()
+
+  if recordCount > 0 {
+    t.Render()
+  } else {
+    fmt.Println("\nIt appears there are no entires matching that query. Please try again.\n")
+  }
 }
 

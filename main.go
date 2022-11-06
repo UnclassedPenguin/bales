@@ -455,6 +455,11 @@ func main() {
     // The phrases are stored in the slice recordStrings
     // If no additional phrases were set, ie no flags were used, sends only the baseString,
     // which returns the entire database.
+    // Additionally I have added the ability to order by date, either ascending or desending.
+    // I needed this because sometimes you add a record after the date, and they appear
+    // out of order. To do it, the program checks if the flag is set to order by date, 
+    // and then just tags it on to the end of the sql query. If the flags aren't set,
+    // it just tags on an empty string so nothing changes.
     if len(recordStrings) == 0 {
       fmt.Println("Date: ", timeStr)
       fullString := fmt.Sprint(baseString + dateOrder)
