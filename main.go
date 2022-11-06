@@ -27,24 +27,11 @@ import (
   "path/filepath"
   "gopkg.in/yaml.v2"
   _ "github.com/mattn/go-sqlite3"
-  "github.com/unclassedpenguin/bales/config"
-  "github.com/unclassedpenguin/bales/database"
-  "github.com/unclassedpenguin/bales/functions"
+  c "github.com/unclassedpenguin/bales/config"
+  d "github.com/unclassedpenguin/bales/database"
+  f "github.com/unclassedpenguin/bales/functions"
 )
 
-
-// s for give me some (s)pace
-func s() {
-  fmt.Print("\n")
-}
-
-// Exits. Obvious,  yeah?
-// Closes the database
-func exit(db *sql.DB, status int) {
-  db.Close()
-  fmt.Printf("bales: exit (%d)\n", status)
-  os.Exit(status)
-}
 
 // Global variable for databases. One for real, and one to test 
 // things with, that has garbage data in it.
@@ -155,17 +142,17 @@ func main() {
   // Handles cmd line flag -i 
   // Prints info and exits
   if info {
-    functions.PrintInfo()
+    f.PrintInfo()
   }
 
   // Handles cmd line flag -v 
   // Prints version and exits
   if version {
-    functions.PrintVersion()
+    f.PrintVersion()
   }
 
   if debug {
-    functions.DebugFunction()
+    f.DebugFunction()
   }
 
   // Variable to hold the date
@@ -180,7 +167,7 @@ func main() {
   }
 
   // Use regexp to check date to make sure it is a valid yyyy-mm-dd date
-  functions.CheckDate(timeStr)
+  f.CheckDate(timeStr)
 
   // Read Config file and setup databases
   home, _ := os.UserHomeDir()
@@ -190,7 +177,7 @@ func main() {
     os.Exit(1)
   }
 
-  var configData config.Configuration
+  var configData c.Configuration
   err = yaml.Unmarshal(configFile, &configData)
   if err != nil {
     fmt.Println("Error Unmarshal-ling yaml config file:\n", err)
@@ -225,7 +212,7 @@ func main() {
   }
 
   // Creates database if it hasn't been created yet.
-  database.CreateDatabase(databaseToUse)
+  d.CreateDatabase(databaseToUse)
 
   // Initialize database
   db, err := sql.Open("sqlite3", databaseToUse)
@@ -235,7 +222,7 @@ func main() {
     }
 
   // Creates the table initially. "IF NOT EXISTS"
-  database.CreateTable(db)
+  d.CreateTable(db)
 
   // Var to hold the type of bale.
   var typeOfBale string
@@ -248,7 +235,7 @@ func main() {
       typeOfBale = "round"
     } else if square && round {
       fmt.Println("You can't use -s and -r together! How can a bale be a round and square?")
-      exit(db, 1)
+      f.Exit(db, 1)
     } else {
       typeOfBale = "round"
     }
@@ -257,14 +244,14 @@ func main() {
     fmt.Println("Group       : ", group)
     fmt.Println("Type of Bale: ", typeOfBale)
     fmt.Println("Num of Bales: ", number)
-    s()
+    fmt.Println("")
     fmt.Println("Adding record...")
-    database.AddRecord(db, timeStr, group, typeOfBale, number)
+    d.AddRecord(db, timeStr, group, typeOfBale, number)
     fmt.Println("Record added!")
-    exit(db, 0)
+    f.Exit(db, 0)
   } else if add {
     fmt.Println("Requires -g and -n! Try again, or try -h for help.")
-    exit(db, 1)
+    f.Exit(db, 1)
   }
 
   // Handles the command line way to delete record
@@ -272,9 +259,9 @@ func main() {
     if number != 0 && group == "" {
       fmt.Print("Deleting record ", number , "...\n")
       str := fmt.Sprint("DELETE FROM bales WHERE id=" + strconv.Itoa(number))
-      database.DeleteRecord(db, str)
+      d.DeleteRecord(db, str)
       fmt.Println("Record deleted!")
-      exit(db, 0)
+      f.Exit(db, 0)
     } else if number == 0 && group != "" {
       var choice string
       fmt.Print("Are you sure you want to delete ALL entries for group '" + group + "'? (y or n)\n")
@@ -283,20 +270,20 @@ func main() {
       if strings.ToLower(choice) == "y" || strings.ToLower(choice) == "yes" {
         fmt.Print("Deleting group ", group , "...\n")
         str := fmt.Sprint("DELETE FROM bales WHERE AnimalGroup='" + group + "'")
-        database.DeleteRecord(db, str)
+        d.DeleteRecord(db, str)
         fmt.Println("Records deleted!")
-        exit(db, 0)
+        f.Exit(db, 0)
       } else {
         fmt.Println("Ok, not deleting group '" + group + "'.")
-        exit(db, 0)
+        f.Exit(db, 0)
       }
     } else if number != 0 && group != "" {
       fmt.Println("Error:")
       fmt.Println("Can't use -n and -g together. Try -h for usage")
-      exit(db, 1)
+      f.Exit(db, 1)
     } else {
       fmt.Println("Requires -n (ID number of record to delete) or -g (Group to delete)! Try again, or try -h for help.")
-      exit(db, 1)
+      f.Exit(db, 1)
     }
   }
 
@@ -308,8 +295,8 @@ func main() {
     if custom != "" {
       fmt.Println("Date: ", timeStr)
       record, err := db.Query(custom)
-      database.FetchRecord(db, record, err)
-      exit(db, 0)
+      d.FetchRecord(db, record, err)
+      f.Exit(db, 0)
     }
 
     // recordStrings collects the sql phrases for each different flag. 
@@ -361,7 +348,7 @@ func main() {
       recordStrings = append(recordStrings, baleString)
     } else if round && square {
       fmt.Println("Can't use -s and -r together. How can a bale be square and round?")
-      exit(db, 1)
+      f.Exit(db, 1)
     }
 
     // year is -year flag
@@ -374,7 +361,7 @@ func main() {
         // Lets the user know that the year must be 4 digits, instead of just returning an empty database.
         if len(years[0]) != 4 || len(years[1]) != 4 {
           fmt.Println("Your year appears to be entered wrong. Make sure year contains exactly 4 digits. ie 2022")
-          exit(db, 1)
+          f.Exit(db, 1)
         }
         yearString := "(strftime('%Y', date) between '" + string(years[0]) + "' and '" + string(years[1]) + "')"
         recordStrings = append(recordStrings, yearString)
@@ -383,7 +370,7 @@ func main() {
         // Lets the user know that the year must be 4 digits, instead of just returning an empty database.
         if len(year) != 4 {
           fmt.Println("Your year appears to be entered wrong. Make sure year contains exactly 4 digits. ie 2022")
-          exit(db, 1)
+          f.Exit(db, 1)
         }
         yearString := fmt.Sprint("strftime('%Y', date)='" + year + "'")
         recordStrings = append(recordStrings, yearString)
@@ -400,7 +387,7 @@ func main() {
         // Lets the user know that the month requires a leading 0, instead of just returning an empty database.
         if len(months[0]) != 2 || len(months[1]) != 2 {
           fmt.Println("Your month appears to be wrong. Make sure each month is exactly 2 digits. If its a single digit month, add a leading zero, ie 05.")
-          exit(db, 1)
+          f.Exit(db, 1)
         }
         monthString := "(strftime('%m', date) between '" + string(months[0]) + "' and '" + string(months[1]) + "')"
         recordStrings = append(recordStrings, monthString)
@@ -409,7 +396,7 @@ func main() {
         // Lets the user know that the month requires a leading 0, instead of just returning an empty database.
         if len(month) != 2 {
           fmt.Println("Your month appears to be wrong. Make sure each month is exactly 2 digits. If its a single digit month, add a leading zero, ie 05.")
-          exit(db, 1)
+          f.Exit(db, 1)
         }
         monthString := fmt.Sprint("strftime('%m', date)='" + month + "'")
         recordStrings = append(recordStrings, monthString)
@@ -426,7 +413,7 @@ func main() {
         // Lets the user know that the month requires a leading 0, instead of just returning an empty database.
         if len(days[0]) != 2 || len(days[1]) != 2 {
           fmt.Println("Your day appears to be wrong. Make sure each day is exactly 2 digits. If its a single digit month, add a leading zero, ie 05.")
-          exit(db, 1)
+          f.Exit(db, 1)
         }
         dayString := "(strftime('%d', date) between '" + string(days[0]) + "' and '" + string(days[1]) + "')"
         recordStrings = append(recordStrings, dayString)
@@ -435,7 +422,7 @@ func main() {
         // Lets the user know that the day requires a leading 0, instead of just returning an empty database.
         if len(day) != 2 {
           fmt.Println("Your day appears to be wrong. Make sure each day is exactly 2 digits. If its a single digit month, add a leading zero, ie 05.")
-          exit(db, 1)
+          f.Exit(db, 1)
         }
         dayString := fmt.Sprint("strftime('%d', date)='" + day + "'")
         recordStrings = append(recordStrings, dayString)
@@ -444,7 +431,7 @@ func main() {
 
     // Select from this date to current date.
     if dateFrom != "" {
-      functions.CheckDate(dateFrom)
+      f.CheckDate(dateFrom)
       dateFromString := "(strftime('%Y-%m-%d', date) between '" + dateFrom + "' and '" + timeStr + "')"
       recordStrings = append(recordStrings, dateFromString)
     }
@@ -456,7 +443,7 @@ func main() {
       dateOrder = " ORDER BY date DESC"
     } else if dateNewToOld && dateOldToNew {
       fmt.Println("Error:\nYou can't use both dateoton and datentoo. Conflict order by ascending and descending.")
-      exit(db, 1)
+      f.Exit(db, 1)
     } else {
       dateOrder = ""
     }
@@ -473,16 +460,16 @@ func main() {
       fullString := fmt.Sprint(baseString + dateOrder)
       fmt.Println("SQL Query:", fullString)
       record, err := db.Query(fullString)
-      database.FetchRecord(db, record, err)
-      exit(db, 0)
+      d.FetchRecord(db, record, err)
+      f.Exit(db, 0)
     // If there is one additional phrase, it appends WHERE and the phrase to base string,
     } else if len(recordStrings) == 1 {
       fmt.Println("Date: ", timeStr)
       fullString := fmt.Sprint(baseString + " WHERE " + recordStrings[0] + dateOrder)
       fmt.Println("SQL Query:", fullString)
       record, err := db.Query(fullString)
-      database.FetchRecord(db, record, err)
-      exit(db, 0)
+      d.FetchRecord(db, record, err)
+      f.Exit(db, 0)
     // If there are more than one phrase to add, first it combines them with AND, and 
     // then adds that to baseString, with the connecting WHERE as well.
     } else if len(recordStrings) > 1 {
@@ -491,8 +478,8 @@ func main() {
       fullString := fmt.Sprint(baseString + " WHERE " + combineStrings + dateOrder)
       fmt.Println("SQL Query:", fullString)
       record, err := db.Query(fullString)
-      database.FetchRecord(db, record, err)
-      exit(db, 0)
+      d.FetchRecord(db, record, err)
+      f.Exit(db, 0)
     }
   }
 
@@ -505,7 +492,7 @@ func main() {
     err := cmd.Run()
     if err != nil {
       fmt.Println("Error executing git add --all:\n", err)
-      exit(db, 1)
+      f.Exit(db, 1)
     }
     fmt.Println(stdout.String())
 
@@ -516,7 +503,7 @@ func main() {
     err = cmd.Run()
     if err != nil {
       fmt.Println("Error executing git commit -m 'update bales database':\n", err)
-      exit(db, 1)
+      f.Exit(db, 1)
     }
     fmt.Println(stdout.String())
 
@@ -528,7 +515,7 @@ func main() {
     err = cmd.Run()
     if err != nil {
       fmt.Println("Error executing git push:\n", err)
-      exit(db, 1)
+      f.Exit(db, 1)
     }
     fmt.Println(stdout.String())
     fmt.Println(stderr.String())
@@ -536,7 +523,7 @@ func main() {
     // Unsatisfactory confirmation message
     fmt.Println("You probably pushed it to git...")
     // Exit
-    exit(db, 0)
+    f.Exit(db, 0)
   }
 
   // Handles the github pull command.
@@ -548,12 +535,12 @@ func main() {
     err := cmd.Run()
     if err != nil {
       fmt.Println("Error executing git pull:\n", err)
-      exit(db, 1)
+      f.Exit(db, 1)
     }
     fmt.Println(stdout.String())
 
     // exit
-    exit(db, 0)
+    f.Exit(db, 0)
   }
 
   // Handles the github status command.
@@ -565,12 +552,12 @@ func main() {
     err := cmd.Run()
     if err != nil {
       fmt.Println("Error executing git status:\n", err)
-      exit(db, 1)
+      f.Exit(db, 1)
     }
     fmt.Println(stdout.String())
 
     // exit
-    exit(db, 0)
+    f.Exit(db, 0)
   }
 
   // This runs if no arguments are specified.

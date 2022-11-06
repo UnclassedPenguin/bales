@@ -86,9 +86,7 @@ func FetchRecord(db *sql.DB, record *sql.Rows, err error) {
 
   t.AppendHeader(table.Row{"id", "Date", "Group", "TypeOfBale", "NumOfBale"})
 
-  // I don't remember why I declared the variables in the for loop?
-  // Is this needed? It would probably be more efficient to declare them
-  // outside the loop, if possible. Look into it, and see if they can be moved.
+  // Loop over records and add them to the table
   for record.Next() {
     record.Scan(&id, &Date, &AnimalGroup, &TypeOfBale, &NumOfBales)
     totalSlice = append(totalSlice, NumOfBales)

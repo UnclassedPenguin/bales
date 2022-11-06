@@ -1,9 +1,11 @@
 package functions
 
 import (
-  "fmt"
   "os"
+  "fmt"
   "regexp"
+  "database/sql"
+  _ "github.com/mattn/go-sqlite3"
 )
 
 // For flag -i. Should add some more useful (i)nfo here,
@@ -50,3 +52,13 @@ func PrintVersion() {
   fmt.Println("v0.3.3")
   os.Exit(0)
 }
+
+// Exits. Obvious,  yeah?
+// Closes the database
+func Exit(db *sql.DB, status int) {
+  db.Close()
+  fmt.Printf("bales: exit (%d)\n", status)
+  os.Exit(status)
+}
+
+
