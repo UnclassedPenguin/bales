@@ -38,10 +38,11 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
   - Remove sql string by default. Add flag to show it. I don't think most people would care to see what the query is.
   - Add "checkMonth" and "checkYear" Functions that do a regex and make sure it is 2 digits and 4 digits. Use when for -month and -year to confirm they are valid. Month could also be checked to make sure it is between 1 and 12. 
   - Add "-between" to list dates between one and another
-  - Make default list only list the current month. add -all flag to show entire database
-    - Do I actually want this? Hmm...
   - Add an ability to get average. For square/round. Maybe by group as well. For daily weekly monthly?
     - Think this will be slightly more complicated than I originally thought...
+  - ~~Make default list only list the current month. add -all flag to show entire database~~
+    - Do I actually want this? Hmm...
+    - I tried to implement this, I didn't like it. Instead I added a flag (-m) that lists only current month. It conflicts with -month, so you can't use them together. 
   - ~~Add Ability to delete groups. Maybe add a comfirmation "Are you sure you want to delete group cows? (y or n)"~~
   - ~~Add ability for "or" to group. So command line would be "-g "cows or sheep"", but it would split it to sql: "animalgroup='cows' OR animalgroup='sheep'"~~
   - ~~Add sort by days (similar to years and months) where it can be a specific day or a range...~~
