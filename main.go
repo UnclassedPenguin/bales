@@ -59,6 +59,7 @@ func main() {
     debug        bool
     dateNewToOld bool
     dateOldToNew bool
+    currentMonth bool
     number       int
     group        string
     year         string
@@ -100,7 +101,8 @@ func main() {
     "Order by date, New to Old. (date(n)ew(to)(o)ld) Requires -l")
   flag.BoolVar(&dateOldToNew, "dateoton", false,
     "Order by date, Old to New. (date(o)ld(to)(n)ew) Requires -l")
-
+  flag.BoolVar(&currentMonth,        "m", false,
+    "List only current month.")
   flag.StringVar(     &group,        "g",    "",
     "The name of the group to add to database.")
   flag.StringVar(      &year,     "year",    "",
@@ -157,11 +159,13 @@ func main() {
 
   // Variable to hold the date
   var timeStr string
+  var todaysDate string
+  t := time.Now()
+  todaysDate = t.Format("2006-01-02")
 
   // Get either Current Date or a date entered as a command line option
   if date == "" {
-    t := time.Now()
-    timeStr = t.Format("2006-01-02")
+    timeStr = todaysDate
   } else {
     timeStr = date
   }
@@ -375,6 +379,16 @@ func main() {
         yearString := fmt.Sprint("strftime('%Y', date)='" + year + "'")
         recordStrings = append(recordStrings, yearString)
       }
+    }
+
+
+    if currentMonth && month == "" {
+      splitDate := strings.Split(todaysDate, "-")
+      currentMonthString := "strftime('%m', date)='" + splitDate[1] + "'"
+      recordStrings = append(recordStrings, currentMonthString)
+    } else if currentMonth && month != "" {
+      fmt.Println("Can't use -m and -month together!")
+      f.Exit(db, 1)
     }
 
     // month is -month flag
