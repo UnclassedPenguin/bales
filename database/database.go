@@ -109,7 +109,7 @@ func FetchRecord(db *sql.DB, record *sql.Rows, err error) {
   if recordCount > 0 {
     t.Render()
   } else {
-    fmt.Println("\nIt appears there are no entires matching that query. Please try again.\n")
+    fmt.Println("\nIt appears there are no entries matching that query. Please try again.\n")
   }
 }
 
