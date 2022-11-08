@@ -60,6 +60,7 @@ func main() {
     dateNewToOld bool
     dateOldToNew bool
     currentMonth bool
+    showSql      bool
     number       int
     group        string
     year         string
@@ -103,6 +104,9 @@ func main() {
     "Order by date, Old to New. (date(o)ld(to)(n)ew) Requires -l")
   flag.BoolVar(&currentMonth,        "m", false,
     "List only current month.")
+  flag.BoolVar(     &showSql,      "sql", false,
+    "Show SQL query when listing.")
+
   flag.StringVar(     &group,        "g",    "",
     "The name of the group to add to database.")
   flag.StringVar(      &year,     "year",    "",
@@ -160,6 +164,7 @@ func main() {
   // Variable to hold the date
   var timeStr string
   var todaysDate string
+
   t := time.Now()
   todaysDate = t.Format("2006-01-02")
 
@@ -477,7 +482,9 @@ func main() {
     if len(recordStrings) == 0 {
       fmt.Println("Date: ", timeStr)
       fullString := fmt.Sprint(baseString + dateOrder)
-      fmt.Println("SQL Query:", fullString)
+      if showSql {
+        fmt.Println("SQL Query:", fullString)
+      }
       record, err := db.Query(fullString)
       d.FetchRecord(db, record, err)
       f.Exit(db, 0)
@@ -485,7 +492,9 @@ func main() {
     } else if len(recordStrings) == 1 {
       fmt.Println("Date: ", timeStr)
       fullString := fmt.Sprint(baseString + " WHERE " + recordStrings[0] + dateOrder)
-      fmt.Println("SQL Query:", fullString)
+      if showSql {
+        fmt.Println("SQL Query:", fullString)
+      }
       record, err := db.Query(fullString)
       d.FetchRecord(db, record, err)
       f.Exit(db, 0)
@@ -495,7 +504,9 @@ func main() {
       fmt.Println("Date: ", timeStr)
       combineStrings := strings.Join(recordStrings, " AND ")
       fullString := fmt.Sprint(baseString + " WHERE " + combineStrings + dateOrder)
-      fmt.Println("SQL Query:", fullString)
+      if showSql {
+        fmt.Println("SQL Query:", fullString)
+      }
       record, err := db.Query(fullString)
       d.FetchRecord(db, record, err)
       f.Exit(db, 0)
