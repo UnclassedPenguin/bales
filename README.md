@@ -35,6 +35,7 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
 
 
 ## To-do:
+  - Remove sql string by default. Add flag to show it. I don't think most people would care to see what the query is.
   - Add "-between" to list dates between one and another
   - Make default list only list the current month. add -all flag to show entire database
     - Do I actually want this? Hmm...
