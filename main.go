@@ -176,7 +176,11 @@ func main() {
   }
 
   // Use regexp to check date to make sure it is a valid yyyy-mm-dd date
-  f.CheckDate(timeStr)
+  if !f.CheckDate(timeStr) {
+    fmt.Println("Error:")
+    fmt.Println("\nIt seems your date isn't the proper format. Please enter date as YYYY-MM-DD ie 2022-01-12\n")
+    os.Exit(1)
+  }
 
   // Read Config file and setup databases
   home, _ := os.UserHomeDir()
@@ -368,8 +372,8 @@ func main() {
       if contains {
         years := strings.Split(year, "-")
         // Lets the user know that the year must be 4 digits, instead of just returning an empty database.
-        if len(years[0]) != 4 || len(years[1]) != 4 {
-          fmt.Println("Your year appears to be entered wrong. Make sure year contains exactly 4 digits. ie 2022")
+        if !f.CheckYear(years[0]) || !f.CheckYear(years[1]) {
+          fmt.Println("\nYour year appears to be entered wrong. Make sure year contains exactly 4 digits. ie 2022\n")
           f.Exit(db, 1)
         }
         yearString := "(strftime('%Y', date) between '" + string(years[0]) + "' and '" + string(years[1]) + "')"
@@ -377,8 +381,8 @@ func main() {
       // This handles single year 
       } else {
         // Lets the user know that the year must be 4 digits, instead of just returning an empty database.
-        if len(year) != 4 {
-          fmt.Println("Your year appears to be entered wrong. Make sure year contains exactly 4 digits. ie 2022")
+        if !f.CheckYear(year) {
+          fmt.Println("\nYour year appears to be entered wrong. Make sure year contains exactly 4 digits. ie 2022\n")
           f.Exit(db, 1)
         }
         yearString := fmt.Sprint("strftime('%Y', date)='" + year + "'")
@@ -404,8 +408,10 @@ func main() {
       if contains {
         months := strings.Split(month, "-")
         // Lets the user know that the month requires a leading 0, instead of just returning an empty database.
-        if len(months[0]) != 2 || len(months[1]) != 2 {
-          fmt.Println("Your month appears to be wrong. Make sure each month is exactly 2 digits. If its a single digit month, add a leading zero, ie 05.")
+        // CheckMonth checks if it is a valid month, and returns true. So if !false (true), it warns the user
+        // the month is incorrect.
+        if !f.CheckMonth(months[0]) || !f.CheckMonth(months[1]) {
+          fmt.Println("\nYour month appears to be wrong. Make sure each month is exactly 2 digits, and between 01-12. If it's a single digit month, add a leading zero, ie 05.\n")
           f.Exit(db, 1)
         }
         monthString := "(strftime('%m', date) between '" + string(months[0]) + "' and '" + string(months[1]) + "')"
@@ -413,8 +419,9 @@ func main() {
       // This handles single month
       } else {
         // Lets the user know that the month requires a leading 0, instead of just returning an empty database.
-        if len(month) != 2 {
-          fmt.Println("Your month appears to be wrong. Make sure each month is exactly 2 digits. If its a single digit month, add a leading zero, ie 05.")
+        //if len(month) != 2 {
+        if !f.CheckMonth(month) {
+          fmt.Println("\nYour month appears to be wrong. Make sure each month is exactly 2 digits, and between 01-12. If it's a single digit month, add a leading zero, ie 05.\n")
           f.Exit(db, 1)
         }
         monthString := fmt.Sprint("strftime('%m', date)='" + month + "'")
@@ -429,9 +436,9 @@ func main() {
       // This handles if you have a range of days. must be written as i.e. 05-10
       if contains {
         days := strings.Split(day, "-")
-        // Lets the user know that the month requires a leading 0, instead of just returning an empty database.
-        if len(days[0]) != 2 || len(days[1]) != 2 {
-          fmt.Println("Your day appears to be wrong. Make sure each day is exactly 2 digits. If its a single digit month, add a leading zero, ie 05.")
+        // Lets the user know that the day requires a leading 0, instead of just returning an empty database.
+        if !f.CheckDay(days[0]) || !f.CheckDay(days[1]) {
+          fmt.Println("\nYour day appears to be wrong. Make sure each day is exactly 2 digits, and between 01-31. If it's a single digit month, add a leading zero, ie 05.\n")
           f.Exit(db, 1)
         }
         dayString := "(strftime('%d', date) between '" + string(days[0]) + "' and '" + string(days[1]) + "')"
@@ -439,8 +446,8 @@ func main() {
       // This handles single day
       } else {
         // Lets the user know that the day requires a leading 0, instead of just returning an empty database.
-        if len(day) != 2 {
-          fmt.Println("Your day appears to be wrong. Make sure each day is exactly 2 digits. If its a single digit month, add a leading zero, ie 05.")
+        if !f.CheckDay(day) {
+          fmt.Println("\nYour day appears to be wrong. Make sure each day is exactly 2 digits, and between 01-31. If it's a single digit month, add a leading zero, ie 05.\n")
           f.Exit(db, 1)
         }
         dayString := fmt.Sprint("strftime('%d', date)='" + day + "'")
@@ -450,7 +457,12 @@ func main() {
 
     // Select from this date to current date.
     if dateFrom != "" {
-      f.CheckDate(dateFrom)
+      if !f.CheckDate(dateFrom) {
+        fmt.Println("Error:")
+        fmt.Println("\nIt seems your date isn't the proper format. Please enter date as YYYY-MM-DD ie 2022-01-12\n")
+        f.Exit(db, 1)
+      }
+
       dateFromString := "(strftime('%Y-%m-%d', date) between '" + dateFrom + "' and '" + timeStr + "')"
       recordStrings = append(recordStrings, dateFromString)
     }
