@@ -43,7 +43,8 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
   - ~~Make default list only list the current month. add -all flag to show entire database~~
     - Do I actually want this? Hmm...
     - I tried to implement this, I didn't like it. Instead I added a flag (-m) that lists only current month. It conflicts with -month, so you can't use them together. 
-  - ~~Add Ability to delete groups. Maybe add a comfirmation "Are you sure you want to delete group cows? (y or n)"~~
+  - ~~Add Ability to delete groups. Maybe add a comfirmation "Are you sure you want to delete group cows? (y or n)"~~  
+  v.0.3.3  
   - ~~Add ability for "or" to group. So command line would be "-g "cows or sheep"", but it would split it to sql: "animalgroup='cows' OR animalgroup='sheep'"~~
   - ~~Add sort by days (similar to years and months) where it can be a specific day or a range...~~
   - ~~Restructure code so its not all stuck in main~~
