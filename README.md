@@ -35,10 +35,12 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
 
 
 ## To-do:
-  - Add "checkMonth" and "checkYear" Functions that do a regex and make sure it is 2 digits and 4 digits. Use when for -month and -year to confirm they are valid. Month could also be checked to make sure it is between 1 and 12. 
   - Add "-between" to list dates between one and another
   - Add an ability to get average. For square/round. Maybe by group as well. For daily weekly monthly?
-    - Think this will be slightly more complicated than I originally thought...
+    - Think this will be slightly more complicated than I originally thought...  
+  v0.3.4
+  - ~~Add "checkMonth" and "checkYear" Functions that do a regex and make sure it is 2 digits and 4 digits. Use when for -month and -year to confirm they are valid. Month could also be checked to make sure it is between 1 and 12.~~
+    - Added "CheckYear", "CheckMonth", and "CheckDay" to functions.
   - ~~Remove sql string by default. Add flag to show it. I don't think most people would care to see what the query is.~~
   - ~~Make default list only list the current month. add -all flag to show entire database~~
     - Do I actually want this? Hmm...
