@@ -192,7 +192,7 @@ func main() {
   // I use this directory in the git section near the end
   dbDir := configData.DatabaseDir
 
-  // Variable for databases. One for real, and one to test 
+  // Variable for databases. One for real, and one to test
   // things with, that has garbage data in it.
   var (
     realDb string
