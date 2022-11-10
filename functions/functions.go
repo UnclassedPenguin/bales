@@ -96,7 +96,7 @@ func DebugFunction() {
 // For flag -v. Print version info
 func PrintVersion() {
   fmt.Println("UnclassedPenguin Bale Tracker")
-  fmt.Println("v0.3.4")
+  fmt.Println("v0.3.5")
   os.Exit(0)
 }
 
