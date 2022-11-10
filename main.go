@@ -33,13 +33,6 @@ import (
 )
 
 
-// Global variable for databases. One for real, and one to test 
-// things with, that has garbage data in it.
-var (
-  realDb string
-  testDb string
-)
-
 // Main Function
 func main() {
 
@@ -198,6 +191,13 @@ func main() {
 
   // I use this directory in the git section near the end
   dbDir := configData.DatabaseDir
+
+  // Variable for databases. One for real, and one to test 
+  // things with, that has garbage data in it.
+  var (
+    realDb string
+    testDb string
+  )
 
   // This sets the database based on the config file
   realDb = configData.RealDatabase
