@@ -35,6 +35,7 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
 
 
 ## To-do:
+  - change -dateoton and -datentoo to -asc and -dec
   - Possibly add Notes column?
   - Add ability to list based on ID number, singular or range (1 or 1-5)
   - Add "-between" to list dates between one and another
