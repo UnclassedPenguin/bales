@@ -35,6 +35,7 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
 
 
 ## To-do:
+  - Add "-today" to list only for the current day
   - change -dateoton and -datentoo to -asc and -dec
   - Possibly add Notes column?
   - Add ability to list based on ID number, singular or range (1 or 1-5)
