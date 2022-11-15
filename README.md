@@ -40,6 +40,7 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
   - Change -dateoton and -datentoo to -asc and -dec
   - Possibly add Notes column?
   - Add ability to list based on ID number, singular or range (1 or 1-5)
+    - Do I need this? I'm sure I wanted it for some reason...I'm not sure I want to put it in though. 
   - Add "-between" to list dates between one and another
   - Add an ability to get average. For square/round. Maybe by group as well. For daily weekly monthly?
     - Think this will be slightly more complicated than I originally thought...  
