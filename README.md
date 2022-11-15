@@ -35,6 +35,7 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
 
 
 ## To-do:
+  - when you mess up the -day flag, it still says something about month
   - Add "-today" to list only for the current day
   - change -dateoton and -datentoo to -asc and -dec
   - Possibly add Notes column?
