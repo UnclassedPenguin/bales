@@ -438,7 +438,7 @@ func main() {
         days := strings.Split(day, "-")
         // Lets the user know that the day requires a leading 0, instead of just returning an empty database.
         if !f.CheckDay(days[0]) || !f.CheckDay(days[1]) {
-          fmt.Println("\nYour day appears to be wrong. Make sure each day is exactly 2 digits, and between 01-31. If it's a single digit month, add a leading zero, ie 05.\n")
+          fmt.Println("\nYour day appears to be wrong. Make sure each day is exactly 2 digits, and between 01-31. If it's a single digit day, add a leading zero, ie 05.\n")
           f.Exit(db, 1)
         }
         dayString := "(strftime('%d', date) between '" + string(days[0]) + "' and '" + string(days[1]) + "')"
@@ -447,7 +447,7 @@ func main() {
       } else {
         // Lets the user know that the day requires a leading 0, instead of just returning an empty database.
         if !f.CheckDay(day) {
-          fmt.Println("\nYour day appears to be wrong. Make sure each day is exactly 2 digits, and between 01-31. If it's a single digit month, add a leading zero, ie 05.\n")
+          fmt.Println("\nYour day appears to be wrong. Make sure each day is exactly 2 digits, and between 01-31. If it's a single digit day, add a leading zero, ie 05.\n")
           f.Exit(db, 1)
         }
         dayString := fmt.Sprint("strftime('%d', date)='" + day + "'")
