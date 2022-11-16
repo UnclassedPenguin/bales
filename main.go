@@ -53,6 +53,7 @@ func main() {
     dateNewToOld bool
     dateOldToNew bool
     currentMonth bool
+    today        bool
     showSql      bool
     number       int
     group        string
@@ -99,6 +100,8 @@ func main() {
     "List only current month.")
   flag.BoolVar(     &showSql,      "sql", false,
     "Show SQL query when listing.")
+  flag.BoolVar(       &today,    "today", false,
+    "Show entries only for current day.")
 
   flag.StringVar(     &group,        "g",    "",
     "The name of the group to add to database.")
@@ -347,11 +350,6 @@ func main() {
       }
     }
 
-    if date != "" {
-      dateString := fmt.Sprint("date='"+date+"'")
-      recordStrings = append(recordStrings, dateString)
-    }
-
     // round is -r flag and square is -s flag
     if round && !square {
       baleString := fmt.Sprint("TypeOfBale='round'")
@@ -362,6 +360,17 @@ func main() {
     } else if round && square {
       fmt.Println("Can't use -s and -r together. How can a bale be square and round?")
       f.Exit(db, 1)
+    }
+
+
+    if date != "" {
+      dateString := fmt.Sprint("date='"+date+"'")
+      recordStrings = append(recordStrings, dateString)
+    }
+
+    if today {
+      todayString := fmt.Sprint("strftime('%Y-%m-%d', date)='" + todaysDate + "'")
+      recordStrings = append(recordStrings, todayString)
     }
 
     // year is -year flag
