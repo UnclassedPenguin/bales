@@ -92,9 +92,9 @@ func main() {
     "Print the version number and exit.")
   flag.BoolVar(       &debug,    "debug", false,
     "Execute function for debugging.")
-  flag.BoolVar(&dateNewToOld, "datentoo", false,
+  flag.BoolVar(&dateNewToOld,     "desc", false,
     "Order by date, New to Old. (date(n)ew(to)(o)ld) Requires -l")
-  flag.BoolVar(&dateOldToNew, "dateoton", false,
+  flag.BoolVar(&dateOldToNew,      "asc", false,
     "Order by date, Old to New. (date(o)ld(to)(n)ew) Requires -l")
   flag.BoolVar(&currentMonth,        "m", false,
     "List only current month.")
