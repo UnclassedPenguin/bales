@@ -36,12 +36,13 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
 
 ## To-do:
 
-  - Possibly add Notes column?
   - Add ability to list based on ID number, singular or range (1 or 1-5)
     - Do I need this? I'm sure I wanted it for some reason...I'm not sure I want to put it in though. 
   - Add "-between" to list dates between one and another
   - Add an ability to get average. For square/round. Maybe by group as well. For daily weekly monthly?
     - Think this will be slightly more complicated than I originally thought...  
+  - ~~Possibly add Notes column?~~
+    - I tried this. Would basically need me to restart the database. I don't think its worth it. It really messes with the formatting when listing...Just doesn't seem worth it at this point.
   - ~~Change -dateoton and -datentoo to -asc and -dec~~
   - ~~Add "-today" to list only for the current day~~
   - ~~When you mess up the -day flag, it still says something about month~~
