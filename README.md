@@ -36,7 +36,6 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
 
 ## To-do:
 
-  - Add "-today" to list only for the current day
   - Change -dateoton and -datentoo to -asc and -dec
   - Possibly add Notes column?
   - Add ability to list based on ID number, singular or range (1 or 1-5)
@@ -44,6 +43,7 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
   - Add "-between" to list dates between one and another
   - Add an ability to get average. For square/round. Maybe by group as well. For daily weekly monthly?
     - Think this will be slightly more complicated than I originally thought...  
+  - ~~Add "-today" to list only for the current day~~
   - ~~When you mess up the -day flag, it still says something about month~~
 
 #### v0.3.4
