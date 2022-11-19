@@ -93,9 +93,9 @@ func main() {
   flag.BoolVar(       &debug,    "debug", false,
     "Execute function for debugging.")
   flag.BoolVar(&dateNewToOld,     "desc", false,
-    "Order by date, New to Old. (date(n)ew(to)(o)ld) Requires -l")
+    "List entires in descending order. Requires -l")
   flag.BoolVar(&dateOldToNew,      "asc", false,
-    "Order by date, Old to New. (date(o)ld(to)(n)ew) Requires -l")
+    "List entries in ascending order. Requires -l")
   flag.BoolVar(&currentMonth,        "m", false,
     "List only current month.")
   flag.BoolVar(     &showSql,      "sql", false,
