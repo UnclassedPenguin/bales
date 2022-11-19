@@ -41,6 +41,9 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
   - Add "-between" to list dates between one and another
   - Add an ability to get average. For square/round. Maybe by group as well. For daily weekly monthly?
     - Think this will be slightly more complicated than I originally thought...  
+
+#### v0.3.6
+
   - ~~Possibly add Notes column?~~
     - I tried this. Would basically need me to restart the database. I don't think its worth it. It really messes with the formatting when listing...Just doesn't seem worth it at this point.
   - ~~Change -dateoton and -datentoo to -asc and -dec~~
