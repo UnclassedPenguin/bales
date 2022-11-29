@@ -35,7 +35,8 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
 
 
 ## To-do:
-
+  
+  - Add license?
   - Add ability to list based on ID number, singular or range (1 or 1-5)
     - Do I need this? I'm sure I wanted it for some reason...I'm not sure I want to put it in though. 
   - Add "-between" to list dates between one and another
