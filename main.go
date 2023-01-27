@@ -53,7 +53,7 @@ func main() {
     debug        bool
     dateNewToOld bool
     dateOldToNew bool
-    currentMonth bool
+    showOnlyCurrentMonth bool
     today        bool
     showSql      bool
     number       int
@@ -100,7 +100,7 @@ func main() {
     "List entires in descending order. Requires -l")
   flag.BoolVar(&dateOldToNew,      "asc", false,
     "List entries in ascending order. Requires -l")
-  flag.BoolVar(&currentMonth,        "m", false,
+  flag.BoolVar(&showOnlyCurrentMonth,        "m", false,
     "List only current month.")
   flag.BoolVar(     &showSql,      "sql", false,
     "Show SQL query when listing.")
@@ -164,7 +164,7 @@ func main() {
   // Variable to hold the date
   var timeStr string
   var todaysDate string
-  var actualMonth string
+  var currentMonth string
 
   t := time.Now()
   todaysDate = t.Format("2006-01-02")
@@ -179,7 +179,7 @@ func main() {
 
   // Gets current month for list
   splitDate := strings.Split(todaysDate, "-")
-  actualMonth = splitDate[1]
+  currentMonth = splitDate[1]
 
   // Use regexp to check date to make sure it is a valid yyyy-mm-dd date
   if !f.CheckDate(timeStr) {
@@ -410,11 +410,10 @@ func main() {
     }
 
 
-    if currentMonth && month == "" {
-      splitDate := strings.Split(todaysDate, "-")
-      currentMonthString := "strftime('%m', date)='" + splitDate[1] + "'"
-      recordStrings = append(recordStrings, currentMonthString)
-    } else if currentMonth && month != "" {
+    if showOnlyCurrentMonth && month == "" {
+      showOnlyCurrentMonthString := "strftime('%m', date)='" + currentMonth + "'"
+      recordStrings = append(recordStrings, showOnlyCurrentMonthString)
+    } else if showOnlyCurrentMonth && month != "" {
       fmt.Println("Can't use -m and -month together!")
       f.Exit(db, 1)
     }
@@ -513,14 +512,13 @@ func main() {
     if len(recordStrings) == 0 {
       var fullString string
       fmt.Println("Date: ", timeStr)
-      // Changed this so that by default (Uisng only the -l flag) it will list only the current month.
+      // Changed this so that by default (Using only the -l flag) it will list only the current month.
       // If you want to see everything, you can use -all flag. Other queries shouldn't be affected, 
-      // because this only runs when there are no additional arguments. "actualMonth" is the current 
-      // month. But currentMonth was already taken :p. My naming could be better I think...
+      // because this only runs when there are no additional arguments.
       if all {
         fullString = fmt.Sprint(baseString + dateOrder)
       } else {
-        fullString = fmt.Sprint("SELECT * FROM bales WHERE strftime('%m', date)='" + actualMonth + "'" + dateOrder)
+        fullString = fmt.Sprint("SELECT * FROM bales WHERE strftime('%m', date)='" + currentMonth + "'" + dateOrder)
       }
       if showSql {
         fmt.Println("SQL Query:", fullString)
