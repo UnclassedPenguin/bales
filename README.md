@@ -36,6 +36,7 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
 
 ## To-do:
   
+  - add "-to". So you can do bales -l -from 2022-08-01 -to 2023-04-01
   - Add license?
   - Add ability to list based on ID number, singular or range (1 or 1-5)
     - Do I need this? I'm sure I wanted it for some reason...I'm not sure I want to put it in though. 
