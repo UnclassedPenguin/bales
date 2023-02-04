@@ -33,6 +33,7 @@ Don't forget to edit the DatabaseDir to where you want to store the databases. Y
 
 For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclassed.ca/bales)
 
+test
 
 ## To-do:
   
