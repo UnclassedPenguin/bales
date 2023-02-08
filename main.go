@@ -108,7 +108,9 @@ func main() {
     "Show entries only for current day.")
 
   flag.StringVar(     &group,        "g",    "",
-    "The name of the group to add to database.")
+    "If adding(-a): The name of the group to add to database.\n" +
+    "If listing(-l): The name of the group to list. Can be singular, or combined by using\n" +
+    "quotes as well as \" and \" i.e: bales -l -g \"cows and sheep\"")
   flag.StringVar(      &year,     "year",    "",
     "Year to list from database. Can be a single year(ie 2019) or a range (ie 2019-2022)")
   flag.StringVar(     &month,    "month",    "",
@@ -342,10 +344,10 @@ func main() {
 
     // Group is -g flag
     if group != "" {
-      contains := strings.Contains(group, " or ")
-      // Runs if you use -g "cows or sheep", can be more than two. Must be separated by " or "
+      contains := strings.Contains(group, " and ")
+      // Runs if you use -g "cows and sheep", can be more than two. Must be separated by " and "
       if contains {
-        groups := strings.Split(group, " or ")
+        groups := strings.Split(group, " and ")
         for _, g := range groups {
           str := fmt.Sprint("AnimalGroup='" + g + "'")
           groupStrings = append(groupStrings, str)
