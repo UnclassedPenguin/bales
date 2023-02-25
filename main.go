@@ -57,6 +57,7 @@ func main() {
     today        bool
     showSql      bool
     number       int
+    between      string
     group        string
     year         string
     month        string
@@ -107,6 +108,9 @@ func main() {
   flag.BoolVar(       &today,    "today", false,
     "Show entries only for current day.")
 
+  flag.StringVar(   &between,  "between",    "",
+    "Lists everything between specific dates. Must be two full YYYY-MM-DD separated by a space.\n" +
+    "i.e. bales -l -between \"2022-06-01 2023-02-01\"")
   flag.StringVar(     &group,        "g",    "",
     "If adding(-a): The name of the group to add to database.\n" +
     "If listing(-l): The name of the group to list. Can be singular, or combined by using\n" +
@@ -383,6 +387,27 @@ func main() {
     if today {
       todayString := fmt.Sprint("strftime('%Y-%m-%d', date)='" + todaysDate + "'")
       recordStrings = append(recordStrings, todayString)
+    }
+
+    // between dates. Must be "YYYY-MM-DD YYYY-MM-DD"
+    if between != ""{
+      dates := strings.Split(between, " ")
+
+      if len(dates) > 2 {
+        fmt.Println("\nToo many dates!\n")
+        f.Exit(db, 1)
+      }
+
+      for _, date := range dates {
+        if !f.CheckDate(date) {
+          fmt.Println("\nYour date appears to be entered wrong. Date must be exactly YYYY-MM-DD, ie 2023-01-02\n")
+          f.Exit(db, 1)
+        }
+      }
+
+      betweenString := fmt.Sprint("strftime('%Y-%m-%d', date) between '" + dates[0] + "' and '" + dates[1] + "'")
+      recordStrings = append(recordStrings, betweenString)
+
     }
 
     // year is -year flag
