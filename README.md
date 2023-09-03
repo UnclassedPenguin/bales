@@ -36,6 +36,7 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
 
 ## To-do:
   
+  - On basic list (-l) it shows only current month. It however, still shows for all years. Need to make it show only current month of current year.
   - Add "-most" i.e. "bales -most day" to list the day that you fed the most bales. Do maybe day/month/year?
   - If you try to list for the current month, it gives the default "There are no results for that query"
     Should probably change this so it says no entries for current month. Try -all or something.
