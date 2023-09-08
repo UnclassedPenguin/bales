@@ -36,7 +36,7 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
 
 ## To-do:
   
-  - On basic list (-l) it shows only current month. It however, still shows for all years. Need to make it show only current month of current year.
+  - If you try to list with month first then year, it doesn't work. Has to be year first then month. ? ie `bales -l -m 09 -year 2022` will give you all entries that match the month, however to properly get only the month and year you have to use `bales -l -year 2022 -m 09`
   - Add "-most" i.e. "bales -most day" to list the day that you fed the most bales. Do maybe day/month/year?
   - If you try to list for the current month, it gives the default "There are no results for that query"
     Should probably change this so it says no entries for current month. Try -all or something.
@@ -48,6 +48,7 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
   - Add "-between" to list dates between one and another
   - Add an ability to get average. For square/round. Maybe by group as well. For daily weekly monthly?
     - Think this will be slightly more complicated than I originally thought...  
+  - ~~On basic list (-l) it shows only current month. It however, still shows for all years. Need to make it show only current month of current year.~~
 
 #### v0.3.6
 
