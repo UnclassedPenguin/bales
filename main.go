@@ -171,6 +171,7 @@ func main() {
   var timeStr string
   var todaysDate string
   var currentMonth string
+  var currentYear string
 
   t := time.Now()
   todaysDate = t.Format("2006-01-02")
@@ -186,6 +187,7 @@ func main() {
   // Gets current month for list
   splitDate := strings.Split(todaysDate, "-")
   currentMonth = splitDate[1]
+  currentYear = splitDate[0]
 
   // Use regexp to check date to make sure it is a valid yyyy-mm-dd date
   if !f.CheckDate(timeStr) {
@@ -545,7 +547,7 @@ func main() {
       if all {
         fullString = fmt.Sprint(baseString + dateOrder)
       } else {
-        fullString = fmt.Sprint("SELECT * FROM bales WHERE strftime('%m', date)='" + currentMonth + "'" + dateOrder)
+        fullString = fmt.Sprint("SELECT * FROM bales WHERE strftime('%m', date)='" + currentMonth + "'" + "and strftime('%Y', date)='" + currentYear + "'" + dateOrder)
       }
       if showSql {
         fmt.Println("SQL Query:", fullString)
