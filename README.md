@@ -36,6 +36,7 @@ For further documentation checkout [docs.unclassed.ca/bales](https://docs.unclas
 
 ## To-do:
   
+  - If you use option -year without specifying which year it should show current year
   - option '-m' which should only list current month lists for the current month but of all years
   - If you try to list with month first then year, it doesn't work. Has to be year first then month. ? ie `bales -l -m 09 -year 2022` will give you all entries that match the month, however to properly get only the month and year you have to use `bales -l -year 2022 -m 09`
   - Add "-most" i.e. "bales -most day" to list the day that you fed the most bales. Do maybe day/month/year?
